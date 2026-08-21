@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('qty')->default(1);
             $table->decimal('diskon', 12, 0)->default(0);
             $table->date('tanggal');
-            $table->foreignId('kasir_id')->constrained('pegawai')->cascadeOnDelete();
+            $table->string('kasir_id')->nullable();
             $table->timestamps();
         });
     }

@@ -38,7 +38,7 @@ class PesananController extends Controller
             'qty' => 'required|integer|min:1',
             'diskon' => 'required|numeric|min:0',
             'tanggal' => 'required|date',
-            'kasir_id' => 'required|exists:pengguna,id',
+            'kasir_id' => 'nullable|string|max:255',
             'pembayaran' => 'nullable|in:tunai,transfer,qris',
         ]);
 

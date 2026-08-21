@@ -174,10 +174,10 @@
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Kasir <span class="text-red-500">*</span></label>
-                            <select id="edit-kasir_id" name="kasir_id" required
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Kasir</label>
+                            <select id="edit-kasir_id" name="kasir_id"
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors">
-                                <option value="">Pilih Kasir</option>
+                                <option value="">- Tanpa Kasir -</option>
                                 @foreach ($kasirs as $kasir)
                                     <option value="{{ $kasir->id }}">{{ $kasir->nama }}</option>
                                 @endforeach

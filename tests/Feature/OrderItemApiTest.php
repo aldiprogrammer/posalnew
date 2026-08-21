@@ -44,7 +44,7 @@ class OrderItemApiTest extends TestCase
             'qty' => 2,
             'diskon' => 0,
             'tanggal' => '2026-08-21',
-            'kasir_id' => $kasir->id,
+            'kasir_id' => (string) $kasir->id,
             'pembayaran' => 'transfer',
         ], $overrides);
     }
@@ -77,6 +77,21 @@ class OrderItemApiTest extends TestCase
         $this->postJson('/api/order-items', $this->dataValid(['kode_order' => 'ORD-TIDAK-ADA']))
             ->assertStatus(422)
             ->assertJsonValidationErrors(['kode_order']);
+    }
+
+    public function test_bisa_menambahkan_order_item_tanpa_kasir(): void
+    {
+        $data = $this->dataValid();
+        unset($data['kasir_id']);
+
+        $this->postJson('/api/order-items', $data)
+            ->assertCreated()
+            ->assertJsonPath('success', true);
+
+        $this->assertDatabaseHas('order_items', [
+            'kode_order' => 'ORD-001',
+            'kasir_id' => null,
+        ]);
     }
 
     public function test_bisa_mengubah_order_item(): void
