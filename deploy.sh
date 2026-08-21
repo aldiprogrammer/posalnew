@@ -2,7 +2,7 @@
 set -e
 
 APP_DIR="/home/u107214145/domains/sentosaprinting.com/posalnew"
-WEB_DIR="/home/u107214145/domains/sentosaprinting.com/public_html/posalnew"
+WEB_DIR="/home/u107214145/domains/sentosaprinting.com/public_html/posal"
 BRANCH="main"
 
 echo "======================================"
