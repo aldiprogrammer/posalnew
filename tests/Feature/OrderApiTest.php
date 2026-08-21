@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Models\Kategori;
 use App\Models\Member;
 use App\Models\Order;
-use App\Models\Pegawai;
+use App\Models\Pengguna;
 use App\Models\Pesanan;
 use App\Models\Produk;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -37,7 +37,7 @@ class OrderApiTest extends TestCase
     {
         $kategori = Kategori::create(['nama' => 'Makanan']);
         $produk = Produk::create(['nama' => 'Nasi Goreng', 'kategori_id' => $kategori->id, 'harga' => 15000]);
-        $kasir = Pegawai::create(['nama' => 'Kasir', 'jabatan' => 'Kasir', 'jenis_kelamin' => 'Laki-laki']);
+        $kasir = Pengguna::create(['nama' => 'Kasir', 'username' => 'kasir', 'password' => 'rahasia123']);
 
         Order::create($this->buatOrder());
         Pesanan::create([

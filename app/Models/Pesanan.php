@@ -36,7 +36,7 @@ class Pesanan extends Model
 
     public function kasir(): BelongsTo
     {
-        return $this->belongsTo(Pegawai::class, 'kasir_id');
+        return $this->belongsTo(Pengguna::class, 'kasir_id');
     }
 
     public function getHargaFormattedAttribute(): string

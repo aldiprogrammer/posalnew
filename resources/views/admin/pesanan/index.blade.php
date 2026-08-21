@@ -113,7 +113,7 @@
 
     @php
         $produks = \App\Models\Produk::orderBy('nama')->get();
-        $kasirs = \App\Models\Pegawai::orderBy('nama')->get();
+        $kasirs = \App\Models\Pengguna::orderBy('nama')->get();
     @endphp
 
     {{-- Modal Edit --}}

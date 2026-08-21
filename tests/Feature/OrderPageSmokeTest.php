@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\Kategori;
 use App\Models\Member;
 use App\Models\Order;
-use App\Models\Pegawai;
 use App\Models\Pengguna;
 use App\Models\Pesanan;
 use App\Models\Produk;
@@ -27,7 +26,7 @@ class OrderPageSmokeTest extends TestCase
     {
         $kategori = Kategori::create(['nama' => 'Makanan']);
         $produk = Produk::create(['nama' => 'Nasi Goreng', 'kategori_id' => $kategori->id, 'harga' => 15000]);
-        $kasir = Pegawai::create(['nama' => 'Kasir Satu', 'jabatan' => 'Kasir', 'jenis_kelamin' => 'Laki-laki']);
+        $kasir = Pengguna::create(['nama' => 'Kasir Satu', 'username' => 'kasir1', 'password' => 'rahasia123']);
         $member = Member::create(['nama' => 'Budi', 'nik' => '3201234567890001', 'tanggal_bergabung' => '2026-01-01']);
 
         Order::create([
