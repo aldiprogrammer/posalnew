@@ -34,7 +34,7 @@ class OrderItemController extends Controller
             'diskon' => 'nullable|numeric|min:0',
             'tanggal' => 'required|date',
             'kasir_id' => 'nullable|string|max:255',
-            'pembayaran' => 'nullable|in:tunai,transfer,qris',
+            'pembayaran' => 'nullable|string',
         ]);
 
         $validated['diskon'] = $validated['diskon'] ?? 0;
