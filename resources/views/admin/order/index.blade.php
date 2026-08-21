@@ -49,6 +49,7 @@
                         <th class="text-right px-6 py-3 font-medium text-gray-500">Diskon</th>
                         <th class="text-left px-6 py-3 font-medium text-gray-500">Member</th>
                         <th class="text-center px-6 py-3 font-medium text-gray-500">No Meja</th>
+                        <th class="text-center px-6 py-3 font-medium text-gray-500">Pembayaran</th>
                         <th class="text-center px-6 py-3 font-medium text-gray-500">Status Cetak</th>
                         <th class="text-right px-6 py-3 font-medium text-gray-500">Aksi</th>
                     </tr>
@@ -68,6 +69,17 @@
                             <td class="px-6 py-4 text-gray-600">{{ $order->member->nama ?? 'Non Member' }}</td>
                             <td class="px-6 py-4 text-center">
                                 <span class="bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded-full text-xs font-medium">{{ $order->meja }}</span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                @if ($order->pembayaran === 'tunai')
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">Tunai</span>
+                                @elseif ($order->pembayaran === 'transfer')
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">Transfer</span>
+                                @elseif ($order->pembayaran === 'qris')
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">QRIS</span>
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 text-center">
                                 @if ($order->status_cetak)
@@ -100,7 +112,7 @@
 
                         {{-- Detail Order Items --}}
                         <tr id="detail-{{ $loop->index }}" class="hidden bg-orange-50/40">
-                            <td colspan="10" class="px-6 pb-5 pt-1">
+                            <td colspan="11" class="px-6 pb-5 pt-1">
                                 <div class="bg-white rounded-lg border border-orange-100 overflow-hidden">
                                     <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
                                         <h4 class="text-sm font-semibold text-gray-800">
@@ -118,6 +130,7 @@
                                                     <th class="text-right px-4 py-2.5 font-medium text-gray-500">Diskon</th>
                                                     <th class="text-right px-4 py-2.5 font-medium text-gray-500">Total</th>
                                                     <th class="text-left px-4 py-2.5 font-medium text-gray-500">Kasir</th>
+                                                    <th class="text-center px-4 py-2.5 font-medium text-gray-500">Pembayaran</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="divide-y divide-gray-50">
@@ -129,10 +142,21 @@
                                                         <td class="px-4 py-2.5 text-right text-gray-600">{{ $item->diskon > 0 ? $item->diskon_formatted : '-' }}</td>
                                                         <td class="px-4 py-2.5 text-right font-semibold text-gray-800">{{ $item->total_formatted }}</td>
                                                         <td class="px-4 py-2.5 text-gray-600">{{ $item->kasir->nama ?? '-' }}</td>
+                                                        <td class="px-4 py-2.5 text-center">
+                                                            @if ($item->pembayaran === 'tunai')
+                                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">Tunai</span>
+                                                            @elseif ($item->pembayaran === 'transfer')
+                                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">Transfer</span>
+                                                            @elseif ($item->pembayaran === 'qris')
+                                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">QRIS</span>
+                                                            @else
+                                                                <span class="text-gray-400">-</span>
+                                                            @endif
+                                                        </td>
                                                     </tr>
                                                 @empty
                                                     <tr>
-                                                        <td colspan="6" class="px-4 py-6 text-center text-gray-400">
+                                                        <td colspan="7" class="px-4 py-6 text-center text-gray-400">
                                                             Tidak ada item untuk order ini.
                                                         </td>
                                                     </tr>
@@ -143,7 +167,7 @@
                                                     <tr>
                                                         <td colspan="4" class="px-4 py-2.5 text-right font-medium text-gray-500">Total Harga</td>
                                                         <td class="px-4 py-2.5 text-right font-bold text-orange-600">{{ $order->total_harga_formatted }}</td>
-                                                        <td></td>
+                                                        <td colspan="2"></td>
                                                     </tr>
                                                 </tfoot>
                                             @endif
@@ -154,7 +178,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="10" class="px-6 py-12 text-center text-gray-400">
+                            <td colspan="11" class="px-6 py-12 text-center text-gray-400">
                                 Belum ada data order.
                             </td>
                         </tr>

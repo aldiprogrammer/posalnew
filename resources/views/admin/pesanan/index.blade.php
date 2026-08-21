@@ -49,6 +49,7 @@
                         <th class="text-right px-6 py-3 font-medium text-gray-500">Diskon</th>
                         <th class="text-left px-6 py-3 font-medium text-gray-500">Tanggal</th>
                         <th class="text-left px-6 py-3 font-medium text-gray-500">Kasir</th>
+                        <th class="text-center px-6 py-3 font-medium text-gray-500">Pembayaran</th>
                         <th class="text-right px-6 py-3 font-medium text-gray-500">Aksi</th>
                     </tr>
                 </thead>
@@ -65,9 +66,21 @@
                             <td class="px-6 py-4 text-right text-gray-600">{{ $pesanan->diskon > 0 ? $pesanan->diskon_formatted : '-' }}</td>
                             <td class="px-6 py-4 text-gray-600">{{ $pesanan->tanggal->format('d/m/Y') }}</td>
                             <td class="px-6 py-4 text-gray-600">{{ $pesanan->kasir->nama ?? '-' }}</td>
+                            <td class="px-6 py-4 text-center">
+                                @php $pembayaran = $pesanan->pembayaran; @endphp
+                                @if ($pembayaran === 'tunai')
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">Tunai</span>
+                                @elseif ($pembayaran === 'transfer')
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">Transfer</span>
+                                @elseif ($pembayaran === 'qris')
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">QRIS</span>
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
                             <td class="px-6 py-4 text-right">
                                 <div class="flex items-center justify-end gap-2">
-                                    <button onclick="openEditModal({{ json_encode($pesanan->only('id','kode_order','produk_id','harga','qty','diskon','tanggal','kasir_id')) }})" class="text-gray-400 hover:text-orange-600 transition-colors" title="Edit">
+                                    <button onclick="openEditModal({{ json_encode($pesanan->only('id','kode_order','produk_id','harga','qty','diskon','tanggal','kasir_id','pembayaran')) }})" class="text-gray-400 hover:text-orange-600 transition-colors" title="Edit">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                     </button>
                                     <form action="{{ route('admin.pesanan.destroy', $pesanan) }}" method="POST" onsubmit="return confirm('Yakin hapus pesanan ini?')">
@@ -82,7 +95,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="9" class="px-6 py-12 text-center text-gray-400">
+                            <td colspan="10" class="px-6 py-12 text-center text-gray-400">
                                 Belum ada data order items.
                             </td>
                         </tr>
@@ -170,6 +183,16 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Pembayaran</label>
+                            <select id="edit-pembayaran" name="pembayaran"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors">
+                                <option value="">- Belum Ada -</option>
+                                <option value="tunai">Tunai</option>
+                                <option value="transfer">Transfer</option>
+                                <option value="qris">QRIS</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 sticky bottom-0 bg-white">
                         <button type="button" onclick="closeModal('modal-edit')" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors">Batal</button>
@@ -207,6 +230,7 @@
         document.getElementById('edit-tanggal').value = tanggal;
 
         document.getElementById('edit-kasir_id').value = pesanan.kasir_id || '';
+        document.getElementById('edit-pembayaran').value = pesanan.pembayaran || '';
 
         openModal('modal-edit');
     }

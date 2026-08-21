@@ -19,6 +19,7 @@ class Order extends Model
         'diskon',
         'member_id',
         'meja',
+        'pembayaran',
         'tanggal',
         'status_cetak',
     ];

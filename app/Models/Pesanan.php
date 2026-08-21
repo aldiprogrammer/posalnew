@@ -20,6 +20,7 @@ class Pesanan extends Model
         'diskon',
         'tanggal',
         'kasir_id',
+        'pembayaran',
     ];
 
     protected $casts = [

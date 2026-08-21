@@ -43,6 +43,7 @@ class OrderController extends Controller
             'diskon' => 'required|numeric|min:0',
             'member_id' => 'nullable|exists:member,id',
             'meja' => 'required|string',
+            'pembayaran' => 'nullable|in:tunai,transfer,qris',
             'tanggal' => 'required|date',
         ]);
 
@@ -59,6 +60,7 @@ class OrderController extends Controller
             'diskon' => 'required|numeric|min:0',
             'member_id' => 'nullable|exists:member,id',
             'meja' => 'required|string',
+            'pembayaran' => 'nullable|in:tunai,transfer,qris',
             'tanggal' => 'required|date',
         ]);
 
