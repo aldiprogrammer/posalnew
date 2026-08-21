@@ -32,7 +32,7 @@ class OrderController extends Controller
             'diskon' => 'nullable|numeric|min:0',
             'member_id' => 'nullable|exists:member,id',
             'meja' => 'required|string|max:255',
-            'pembayaran' => 'nullable|in:tunai,transfer,qris',
+            'pembayaran' => 'nullable|string',
             'tanggal' => 'required|date',
             'status_cetak' => 'nullable|boolean',
         ]);
