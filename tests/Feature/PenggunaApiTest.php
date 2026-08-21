@@ -28,21 +28,25 @@ class PenggunaApiTest extends TestCase
     {
         Pengguna::create($this->dataValid());
 
-        $this->getJson('/api/pengguna')
+        $response = $this->getJson('/api/pengguna')
             ->assertOk()
             ->assertJsonPath('success', true)
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.nama', 'Budi')
             ->assertJsonPath('data.0.jabatan.nama', 'Kasir');
+
+        $this->assertArrayHasKey('password', $response->json('data.0'));
     }
 
     public function test_bisa_menambahkan_pengguna_dan_password_terhash(): void
     {
-        $this->postJson('/api/pengguna', $this->dataValid())
+        $response = $this->postJson('/api/pengguna', $this->dataValid())
             ->assertCreated()
             ->assertJsonPath('success', true)
             ->assertJsonPath('data.username', 'budi')
             ->assertJsonMissing(['password' => 'rahasia123']);
+
+        $this->assertArrayHasKey('password', $response->json('data'));
 
         $pengguna = Pengguna::where('username', 'budi')->first();
         $this->assertTrue(Hash::check('rahasia123', $pengguna->password));

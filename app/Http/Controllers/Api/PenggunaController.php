@@ -13,6 +13,7 @@ class PenggunaController extends Controller
     public function index(): JsonResponse
     {
         $penggunas = Pengguna::with('jabatan')->latest()->get();
+        $penggunas->each->makeVisible('password');
 
         return response()->json([
             'success' => true,
@@ -32,6 +33,7 @@ class PenggunaController extends Controller
 
         $pengguna = Pengguna::create($validated);
         $pengguna->load('jabatan');
+        $pengguna->makeVisible('password');
 
         return response()->json([
             'success' => true,
@@ -43,6 +45,7 @@ class PenggunaController extends Controller
     public function show(Pengguna $pengguna): JsonResponse
     {
         $pengguna->load('jabatan');
+        $pengguna->makeVisible('password');
 
         return response()->json([
             'success' => true,
@@ -66,6 +69,7 @@ class PenggunaController extends Controller
 
         $pengguna->update($validated);
         $pengguna->load('jabatan');
+        $pengguna->makeVisible('password');
 
         return response()->json([
             'success' => true,
