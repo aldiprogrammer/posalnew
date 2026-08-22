@@ -82,7 +82,16 @@ class OrderApiTest extends TestCase
 
         $this->postJson('/api/order', $this->buatOrder(['kode_order' => '', 'pembayaran' => 'kartu']))
             ->assertStatus(422)
-            ->assertJsonValidationErrors(['kode_order', 'pembayaran']);
+            ->assertJsonValidationErrors(['kode_order'])
+            ->assertJsonMissingValidationErrors(['pembayaran']);
+    }
+
+    public function test_pembayaran_menerima_nilai_bebas(): void
+    {
+        $this->postJson('/api/order', $this->buatOrder(['pembayaran' => 'kartu debit']))
+            ->assertCreated()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('data.pembayaran', 'kartu debit');
     }
 
     public function test_bisa_mengubah_order(): void

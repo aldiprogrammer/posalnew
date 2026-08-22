@@ -39,7 +39,7 @@ class PesananController extends Controller
             'diskon' => 'required|numeric|min:0',
             'tanggal' => 'required|date',
             'kasir_id' => 'nullable|string|max:255',
-            'pembayaran' => 'nullable|in:tunai,transfer,qris',
+            'pembayaran' => 'nullable|string|max:255',
         ]);
 
         $pesanan->update($validated);
