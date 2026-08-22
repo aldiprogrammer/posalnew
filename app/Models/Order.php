@@ -20,6 +20,8 @@ class Order extends Model
         'member_id',
         'meja',
         'pembayaran',
+        'uang',
+        'kembalian',
         'tanggal',
         'status_cetak',
     ];
@@ -27,6 +29,8 @@ class Order extends Model
     protected $casts = [
         'total_harga' => 'integer',
         'diskon' => 'integer',
+        'uang' => 'integer',
+        'kembalian' => 'integer',
         'tanggal' => 'date',
         'status_cetak' => 'boolean',
     ];
@@ -54,5 +58,15 @@ class Order extends Model
     public function getDiskonFormattedAttribute(): string
     {
         return 'Rp '.number_format($this->diskon, 0, ',', '.');
+    }
+
+    public function getUangFormattedAttribute(): string
+    {
+        return 'Rp '.number_format($this->uang, 0, ',', '.');
+    }
+
+    public function getKembalianFormattedAttribute(): string
+    {
+        return 'Rp '.number_format($this->kembalian, 0, ',', '.');
     }
 }

@@ -47,6 +47,8 @@
                         <th class="text-center px-6 py-3 font-medium text-gray-500">Jumlah Item</th>
                         <th class="text-right px-6 py-3 font-medium text-gray-500">Total Harga</th>
                         <th class="text-right px-6 py-3 font-medium text-gray-500">Diskon</th>
+                        <th class="text-right px-6 py-3 font-medium text-gray-500">Uang</th>
+                        <th class="text-right px-6 py-3 font-medium text-gray-500">Kembalian</th>
                         <th class="text-left px-6 py-3 font-medium text-gray-500">Member</th>
                         <th class="text-center px-6 py-3 font-medium text-gray-500">No Meja</th>
                         <th class="text-center px-6 py-3 font-medium text-gray-500">Pembayaran</th>
@@ -66,6 +68,8 @@
                             <td class="px-6 py-4 text-center font-medium text-gray-800">{{ $order->jumlah_item }}</td>
                             <td class="px-6 py-4 text-right font-semibold text-gray-800">{{ $order->total_harga_formatted }}</td>
                             <td class="px-6 py-4 text-right text-gray-600">{{ $order->diskon > 0 ? $order->diskon_formatted : '-' }}</td>
+                            <td class="px-6 py-4 text-right text-gray-600">{{ $order->uang !== null ? $order->uang_formatted : '-' }}</td>
+                            <td class="px-6 py-4 text-right {{ ($order->kembalian !== null && $order->kembalian >= 0) ? 'text-green-600 font-medium' : 'text-gray-600' }}">{{ $order->kembalian !== null ? $order->kembalian_formatted : '-' }}</td>
                             <td class="px-6 py-4 text-gray-600">{{ $order->member->nama ?? 'Non Member' }}</td>
                             <td class="px-6 py-4 text-center">
                                 <span class="bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded-full text-xs font-medium">{{ $order->meja }}</span>
@@ -114,7 +118,7 @@
 
                         {{-- Detail Order Items --}}
                         <tr id="detail-{{ $loop->index }}" class="hidden bg-orange-50/40">
-                            <td colspan="11" class="px-6 pb-5 pt-1">
+                            <td colspan="13" class="px-6 pb-5 pt-1">
                                 <div class="bg-white rounded-lg border border-orange-100 overflow-hidden">
                                     <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
                                         <h4 class="text-sm font-semibold text-gray-800">
@@ -182,7 +186,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="11" class="px-6 py-12 text-center text-gray-400">
+                            <td colspan="13" class="px-6 py-12 text-center text-gray-400">
                                 Belum ada data order.
                             </td>
                         </tr>

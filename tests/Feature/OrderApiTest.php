@@ -94,6 +94,24 @@ class OrderApiTest extends TestCase
             ->assertJsonPath('data.pembayaran', 'kartu debit');
     }
 
+    public function test_uang_dan_kembalian_bisa_disimpan(): void
+    {
+        $this->postJson('/api/order', $this->buatOrder([
+            'uang' => 50000,
+            'kembalian' => 20000,
+        ]))
+            ->assertCreated()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('data.uang', 50000)
+            ->assertJsonPath('data.kembalian', 20000);
+
+        $this->assertDatabaseHas('order', [
+            'kode_order' => 'ORD-001',
+            'uang' => 50000,
+            'kembalian' => 20000,
+        ]);
+    }
+
     public function test_bisa_mengubah_order(): void
     {
         $order = Order::create($this->buatOrder());

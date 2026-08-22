@@ -44,6 +44,8 @@ class OrderController extends Controller
             'member_id' => 'nullable|exists:member,id',
             'meja' => 'required|string',
             'pembayaran' => 'nullable|string|max:255',
+            'uang' => 'nullable|numeric|min:0',
+            'kembalian' => 'nullable|numeric|min:0',
             'tanggal' => 'required|date',
         ]);
 
@@ -61,6 +63,8 @@ class OrderController extends Controller
             'member_id' => 'nullable|exists:member,id',
             'meja' => 'required|string',
             'pembayaran' => 'nullable|string|max:255',
+            'uang' => 'nullable|numeric|min:0',
+            'kembalian' => 'nullable|numeric|min:0',
             'tanggal' => 'required|date',
         ]);
 
