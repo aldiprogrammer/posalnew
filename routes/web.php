@@ -34,7 +34,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::resource('produk', ProdukController::class)->except(['show', 'create', 'edit']);
     Route::resource('member', MemberController::class)->except(['show', 'create', 'edit']);
     Route::resource('potongan-member', PotonganMemberController::class)->except(['show', 'create', 'edit']);
-    Route::resource('pesanan', PesananController::class)->only(['index', 'update', 'destroy']);
+    Route::resource('pesanan', PesananController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('order', OrderController::class)->only(['index', 'destroy']);
     Route::get('laporan-order', [LaporanOrderController::class, 'index'])->name('laporan-order.index');
     Route::get('profil', [ProfilController::class, 'edit'])->name('profil.edit');

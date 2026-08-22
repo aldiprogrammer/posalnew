@@ -77,6 +77,8 @@
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">Transfer</span>
                                 @elseif ($order->pembayaran === 'qris')
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">QRIS</span>
+                                @elseif (filled($order->pembayaran))
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">{{ $order->pembayaran }}</span>
                                 @else
                                     <span class="text-gray-400">-</span>
                                 @endif
@@ -149,6 +151,8 @@
                                                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">Transfer</span>
                                                             @elseif ($item->pembayaran === 'qris')
                                                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">QRIS</span>
+                                                            @elseif (filled($item->pembayaran))
+                                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">{{ $item->pembayaran }}</span>
                                                             @else
                                                                 <span class="text-gray-400">-</span>
                                                             @endif

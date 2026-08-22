@@ -3,11 +3,25 @@
 @section('content')
     <div class="flex items-center justify-between mb-6">
         <p class="text-gray-600">Daftar semua order items.</p>
+        <button onclick="openCreateModal()" class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Tambah Order Item
+        </button>
     </div>
 
     @if (session('success'))
         <div class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
             {{ session('success') }}
+        </div>
+    @endif
+
+    @if ($errors->any())
+        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+            <ul class="list-disc list-inside space-y-0.5">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
     @endif
 
@@ -74,6 +88,8 @@
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">Transfer</span>
                                 @elseif ($pembayaran === 'qris')
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">QRIS</span>
+                                @elseif ($pembayaran !== null && $pembayaran !== '')
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">{{ $pembayaran }}</span>
                                 @else
                                     <span class="text-gray-400">-</span>
                                 @endif
@@ -115,6 +131,88 @@
         $produks = \App\Models\Produk::orderBy('nama')->get();
         $kasirs = \App\Models\Pengguna::orderBy('nama')->get();
     @endphp
+
+    {{-- Modal Tambah --}}
+    <div id="modal-create" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeModal('modal-create')"></div>
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-lg relative max-h-[90vh] overflow-y-auto">
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 sticky top-0 bg-white">
+                    <h3 class="text-lg font-semibold text-gray-800">Tambah Order Item</h3>
+                    <button onclick="closeModal('modal-create')" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <form action="{{ route('admin.pesanan.store') }}" method="POST">
+                    @csrf
+                    <div class="px-6 py-4 space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Kode Order <span class="text-red-500">*</span></label>
+                            <input type="text" name="kode_order" required maxlength="255"
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
+                                   placeholder="Contoh: ORD-001">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Produk <span class="text-red-500">*</span></label>
+                            <select id="create-produk_id" name="produk_id" required onchange="fillHargaFromProduk()"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors">
+                                <option value="">Pilih Produk</option>
+                                @foreach ($produks as $produk)
+                                    <option value="{{ $produk->id }}" data-harga="{{ $produk->harga }}">{{ $produk->nama }} — {{ 'Rp ' . number_format($produk->harga, 0, ',', '.') }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Harga <span class="text-red-500">*</span></label>
+                                <input type="number" id="create-harga" name="harga" required min="0"
+                                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
+                                       placeholder="0">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Qty <span class="text-red-500">*</span></label>
+                                <input type="number" name="qty" required min="1" value="1"
+                                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Diskon</label>
+                                <input type="number" name="diskon" min="0" value="0"
+                                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
+                                       placeholder="0">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal <span class="text-red-500">*</span></label>
+                                <input type="date" name="tanggal" required
+                                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Kasir</label>
+                            <select name="kasir_id"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors">
+                                <option value="">- Tanpa Kasir -</option>
+                                @foreach ($kasirs as $kasir)
+                                    <option value="{{ $kasir->id }}">{{ $kasir->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Pembayaran</label>
+                            <input type="text" name="pembayaran" maxlength="255"
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
+                                   placeholder="tunai / transfer / qris / bebas">
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 sticky bottom-0 bg-white">
+                        <button type="button" onclick="closeModal('modal-create')" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors">Batal</button>
+                        <button type="submit" class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     {{-- Modal Edit --}}
     <div id="modal-edit" class="fixed inset-0 z-50 hidden">
@@ -214,6 +312,26 @@
     function closeModal(id) {
         document.getElementById(id).classList.add('hidden');
         document.body.style.overflow = '';
+    }
+
+    function openCreateModal() {
+        const form = document.querySelector('#modal-create form');
+        form.reset();
+
+        const tanggalInput = form.querySelector('input[name="tanggal"]');
+        tanggalInput.value = new Date().toISOString().substring(0, 10);
+
+        openModal('modal-create');
+    }
+
+    function fillHargaFromProduk() {
+        const select = document.getElementById('create-produk_id');
+        const option = select.options[select.selectedIndex];
+        const harga = option ? option.dataset.harga : '';
+
+        if (harga !== '' && harga !== undefined) {
+            document.getElementById('create-harga').value = harga;
+        }
     }
 
     function openEditModal(pesanan) {
