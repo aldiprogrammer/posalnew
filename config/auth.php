@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Pengguna;
+use App\Models\User;
 
 return [
 
@@ -17,7 +18,7 @@ return [
 
     'defaults' => [
         'guard' => env('AUTH_GUARD', 'web'),
-        'passwords' => env('AUTH_PASSWORD_BROKER', 'pengguna'),
+        'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
     /*
@@ -39,6 +40,11 @@ return [
 
     'guards' => [
         'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        // Guard khusus untuk tabel pengguna (legacy / API kasir), tetap tersedia
+        'pengguna' => [
             'driver' => 'session',
             'provider' => 'pengguna',
         ],
@@ -62,9 +68,13 @@ return [
     */
 
     'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => User::class,
+        ],
         'pengguna' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', Pengguna::class),
+            'model' => Pengguna::class,
         ],
     ],
 
@@ -88,6 +98,12 @@ return [
     */
 
     'passwords' => [
+        'users' => [
+            'provider' => 'users',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+        ],
         'pengguna' => [
             'provider' => 'pengguna',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),

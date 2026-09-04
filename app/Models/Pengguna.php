@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasStore;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Pengguna extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, HasStore;
 
     protected $table = 'pengguna';
 
     protected $fillable = [
+        'id_store',
         'nama',
         'username',
         'jabatan_id',

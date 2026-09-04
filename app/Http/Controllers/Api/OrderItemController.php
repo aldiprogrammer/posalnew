@@ -85,6 +85,20 @@ class OrderItemController extends Controller
         ]);
     }
 
+    public function byStore(string $id_store): JsonResponse
+    {
+        $items = Pesanan::with(['produk', 'kasir'])
+            ->withoutGlobalScope('store')
+            ->where('order_items.id_store', $id_store)
+            ->latest('tanggal')->latest('id')->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Daftar order items untuk store '.$id_store,
+            'data' => $items,
+        ]);
+    }
+
     public function destroy(Pesanan $order_item): JsonResponse
     {
         $order_item->delete();

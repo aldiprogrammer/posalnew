@@ -91,6 +91,24 @@ class ProdukController extends Controller
         ]);
     }
 
+    /**
+     * GET api/produk/store/{id_store} - untuk mobile: ambil produk per store
+     * Sesuai request: api/produk/{idstore}
+     */
+    public function byStore(string $id_store): JsonResponse
+    {
+        $produks = Produk::with('kategori')
+            ->withoutGlobalScope('store')
+            ->where('id_store', $id_store)
+            ->latest()->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Daftar produk untuk store '.$id_store,
+            'data' => $produks,
+        ]);
+    }
+
     public function destroy(Produk $produk): JsonResponse
     {
         if ($produk->foto) {

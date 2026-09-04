@@ -90,6 +90,21 @@ class OrderController extends Controller
         ]);
     }
 
+    public function byStore(string $id_store): JsonResponse
+    {
+        $orders = Order::with(['member', 'items.produk'])
+            ->withSum('items as jumlah_item', 'qty')
+            ->withoutGlobalScope('store')
+            ->where('order.id_store', $id_store)
+            ->latest('tanggal')->latest('id')->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Daftar order untuk store '.$id_store,
+            'data' => $orders,
+        ]);
+    }
+
     public function destroy(Order $order): JsonResponse
     {
         $order->delete();

@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasStore;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Profil extends Model
 {
-    use HasFactory;
+    use HasFactory, HasStore;
 
     protected $table = 'profil';
 
     protected $fillable = [
+        'id_store',
         'nama_usaha',
         'logo',
         'nohp',

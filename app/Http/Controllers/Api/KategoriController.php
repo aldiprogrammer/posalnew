@@ -61,6 +61,17 @@ class KategoriController extends Controller
         ]);
     }
 
+    public function byStore(string $id_store): JsonResponse
+    {
+        $kategoris = Kategori::withoutGlobalScope('store')->where('id_store', $id_store)->latest()->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Daftar kategori untuk store '.$id_store,
+            'data' => $kategoris,
+        ]);
+    }
+
     public function destroy(Kategori $kategori): JsonResponse
     {
         $kategori->delete();

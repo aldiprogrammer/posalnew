@@ -52,7 +52,7 @@ class KategoriApiTest extends TestCase
     {
         $kategori = Kategori::create(['nama' => 'Makanan']);
 
-        $this->getJson("/api/kategori/{$kategori->id}")
+        $this->getJson("/api/kategori/detail/{$kategori->id}")
             ->assertOk()
             ->assertJsonPath('data.nama', 'Makanan');
     }

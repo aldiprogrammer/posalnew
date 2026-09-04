@@ -65,6 +65,17 @@ class MemberController extends Controller
         ]);
     }
 
+    public function byStore(string $id_store): JsonResponse
+    {
+        $members = Member::withoutGlobalScope('store')->where('id_store', $id_store)->latest()->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Daftar member untuk store '.$id_store,
+            'data' => $members,
+        ]);
+    }
+
     public function destroy(Member $member): JsonResponse
     {
         $member->delete();
