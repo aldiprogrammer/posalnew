@@ -79,6 +79,15 @@
                 <form action="{{ route('admin.kategori.store') }}" method="POST">
                     @csrf
                     <div class="px-6 py-4 space-y-4">
+                        @if ($errors->any())
+                            <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+                                <ul class="list-disc list-inside space-y-1">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Nama <span class="text-red-500">*</span></label>
                             <input type="text" name="nama" value="{{ old('nama') }}" required
@@ -115,7 +124,17 @@
                 <form id="form-edit" method="POST">
                     @csrf
                     @method('PUT')
+                    <input type="hidden" id="edit-kategori-id" name="kategori_id" value="">
                     <div class="px-6 py-4 space-y-4">
+                        @if ($errors->any())
+                            <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+                                <ul class="list-disc list-inside space-y-1">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Nama <span class="text-red-500">*</span></label>
                             <input type="text" id="edit-nama" name="nama" required
@@ -141,7 +160,13 @@
     @if ($errors->any())
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                @if (old('nama') && !old('_method'))
+                    @if (old('_method') === 'PUT')
+                    openModal('modal-edit');
+                    document.getElementById('form-edit').action = '{{ url("admin/kategori/" . old("kategori_id", "")) }}';
+                    document.getElementById('edit-nama').value = @js(old('nama', ''));
+                    document.getElementById('edit-keterangan').value = @js(old('keterangan', ''));
+                    document.getElementById('edit-kategori-id').value = @js(old('kategori_id', ''));
+                @elseif(old('nama'))
                     openModal('modal-create');
                 @endif
             });
@@ -167,6 +192,7 @@
 
         document.getElementById('edit-nama').value = kategori.nama || '';
         document.getElementById('edit-keterangan').value = kategori.keterangan || '';
+        document.getElementById('edit-kategori-id').value = kategori.id;
 
         openModal('modal-edit');
     }

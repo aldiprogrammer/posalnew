@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class KategoriController extends Controller
 {
@@ -18,7 +19,7 @@ class KategoriController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama' => 'required|string|max:255|unique:kategori,nama',
+            'nama' => ['required', 'string', 'max:255', Rule::unique('kategori', 'nama')->where('id_store', auth()->id())],
             'keterangan' => 'nullable|string',
         ]);
 
@@ -30,7 +31,7 @@ class KategoriController extends Controller
     public function update(Request $request, Kategori $kategori)
     {
         $validated = $request->validate([
-            'nama' => 'required|string|max:255|unique:kategori,nama,'.$kategori->id,
+            'nama' => ['required', 'string', 'max:255', Rule::unique('kategori', 'nama')->ignore($kategori->id)->where('id_store', auth()->id())],
             'keterangan' => 'nullable|string',
         ]);
 
