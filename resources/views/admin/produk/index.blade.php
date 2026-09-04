@@ -96,7 +96,7 @@
         @endif
     </div>
 
-    @php $kategoris = \App\Models\kategori::orderBy('nama')->get(); @endphp
+    @php $kategoris = \App\Models\Kategori::orderBy('nama')->get(); @endphp
 
     {{-- Modal Tambah --}}
     <div id="modal-create" class="fixed inset-0 z-50 hidden">
