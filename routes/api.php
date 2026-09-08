@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\MemberController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\OrderItemController;
 use App\Http\Controllers\Api\PenggunaController;
+use App\Http\Controllers\Api\PpnController;
 use App\Http\Controllers\Api\ProdukController;
 use App\Http\Controllers\Api\ProfilController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,8 @@ Route::get('order-items/store/{id_store}', [OrderItemController::class, 'byStore
 Route::get('order-items/{id_store}', [OrderItemController::class, 'byStore']);
 Route::get('profil/store/{id_store}', [ProfilController::class, 'byStore']);
 Route::get('profil/{id_store}', [ProfilController::class, 'byStore']);
+Route::get('ppn/store/{id_store}', [PpnController::class, 'byStore']);
+Route::get('ppn/{id_store}', [PpnController::class, 'byStore']);
 
 Route::apiResource('kategori', KategoriController::class)->except(['show']);
 Route::get('kategori/detail/{kategori}', [KategoriController::class, 'show']);
@@ -30,6 +33,8 @@ Route::apiResource('member', MemberController::class)->except(['show']);
 Route::get('member/detail/{member}', [MemberController::class, 'show']);
 Route::apiResource('produk', ProdukController::class)->except(['show']);
 Route::get('produk/detail/{produk}', [ProdukController::class, 'show']);
+Route::apiResource('ppn', PpnController::class)->except(['show']);
+Route::get('ppn/detail/{ppn}', [PpnController::class, 'show']);
 Route::apiResource('pengguna', PenggunaController::class);
 Route::apiResource('order', OrderController::class)->except(['show']);
 Route::get('order/detail/{order}', [OrderController::class, 'show']);

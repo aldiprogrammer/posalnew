@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\PegawaiController;
 use App\Http\Controllers\Admin\PenggunaController;
 use App\Http\Controllers\Admin\PesananController;
 use App\Http\Controllers\Admin\PotonganMemberController;
+use App\Http\Controllers\Admin\PpnController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Admin\ProfilController;
 use App\Http\Controllers\Auth\LoginController;
@@ -37,6 +38,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::resource('produk', ProdukController::class)->except(['show', 'create', 'edit']);
     Route::resource('member', MemberController::class)->except(['show', 'create', 'edit']);
     Route::resource('potongan-member', PotonganMemberController::class)->except(['show', 'create', 'edit']);
+    Route::resource('ppn', PpnController::class)->except(['show', 'create', 'edit']);
+    Route::post('ppn/{ppn}/toggle-aktif', [PpnController::class, 'toggleAktif'])->name('ppn.toggle-aktif');
     Route::resource('pesanan', PesananController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('order', OrderController::class)->only(['index', 'destroy']);
     Route::get('laporan-order', [LaporanOrderController::class, 'index'])->name('laporan-order.index');

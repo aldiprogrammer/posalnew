@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pengguna;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class PenggunaController extends Controller
@@ -26,7 +27,7 @@ class PenggunaController extends Controller
     {
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
-            'username' => 'required|string|max:255|alpha_dash|unique:pengguna,username',
+            'username' => ['required', 'string', 'max:255', 'alpha_dash', Rule::unique('pengguna', 'username')->where('id_store', auth()->id())],
             'jabatan_id' => 'required|exists:jabatan,id',
             'password' => ['required', Password::min(6)],
         ]);
@@ -58,7 +59,7 @@ class PenggunaController extends Controller
     {
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
-            'username' => 'required|string|max:255|alpha_dash|unique:pengguna,username,'.$pengguna->id,
+            'username' => ['required', 'string', 'max:255', 'alpha_dash', Rule::unique('pengguna', 'username')->ignore($pengguna->id)->where('id_store', auth()->id())],
             'jabatan_id' => 'required|exists:jabatan,id',
             'password' => ['nullable', Password::min(6)],
         ]);

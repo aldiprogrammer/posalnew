@@ -21,6 +21,9 @@ composer install \
     --optimize-autoloader \
     --no-interaction
 
+echo "==> Jalankan migration database"
+php artisan migrate --force
+
 echo "==> Clear cache Laravel"
 php artisan optimize:clear
 

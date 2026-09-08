@@ -87,6 +87,14 @@
                     Potongan Member
                 </a>
 
+                <a href="{{ route('admin.ppn.index') }}"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('admin.ppn.*') ? 'bg-orange-700 text-white' : 'text-orange-100 hover:bg-orange-500 hover:text-white' }}">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5h6m-3-3v6m4 2h-8a3 3 0 01-3 3H6a2 2 0 01-2-2V5a2 2 0 012-2h2m8 11H7a2 2 0 00-2 2v3a2 2 0 002 2h10a2 2 0 002-2v-3a2 2 0 00-2-2z"/>
+                    </svg>
+                    PPN
+                </a>
+
                 <a href="{{ route('admin.order.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('admin.order.*') ? 'bg-orange-700 text-white' : 'text-orange-100 hover:bg-orange-500 hover:text-white' }}">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,9 +149,9 @@
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <span class="text-sm text-gray-500">{{ Auth::user()->nama ?? 'Admin' }}</span>
+                    <span class="text-sm text-gray-500">{{ Auth::user()->name ?? 'Admin' }}</span>
                     <div class="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center text-sm font-bold">
-                        {{ strtoupper(substr(Auth::user()->nama ?? 'A', 0, 1)) }}
+                        {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
                     </div>
                     <form action="{{ route('logout') }}" method="POST" onsubmit="return confirm('Yakin ingin keluar?')">
                         @csrf
