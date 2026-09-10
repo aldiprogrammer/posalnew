@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JabatanController;
 use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Admin\LaporanOrderController;
+use App\Http\Controllers\Admin\MejaController;
 use App\Http\Controllers\Admin\MemberController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PegawaiController;
@@ -36,6 +37,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::resource('jabatan', JabatanController::class)->except(['show', 'create', 'edit']);
     Route::resource('pengguna', PenggunaController::class)->except(['show', 'create', 'edit']);
     Route::resource('produk', ProdukController::class)->except(['show', 'create', 'edit']);
+    Route::resource('meja', MejaController::class)->except(['show', 'create', 'edit']);
+    Route::get('meja-export-pdf', [MejaController::class, 'exportPdf'])->name('meja.export-pdf');
     Route::resource('member', MemberController::class)->except(['show', 'create', 'edit']);
     Route::resource('potongan-member', PotonganMemberController::class)->except(['show', 'create', 'edit']);
     Route::resource('ppn', PpnController::class)->except(['show', 'create', 'edit']);

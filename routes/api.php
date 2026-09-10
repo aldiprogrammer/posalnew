@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\KategoriController;
 use App\Http\Controllers\Api\MemberController;
+use App\Http\Controllers\Api\MejaController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\OrderItemController;
 use App\Http\Controllers\Api\PenggunaController;
@@ -31,6 +32,8 @@ Route::get('potongan-member/store/{id_store}', [PotonganMemberController::class,
 Route::get('potongan-member/{id_store}', [PotonganMemberController::class, 'byStore']);
 Route::get('potongan-member/active/store/{id_store}', [PotonganMemberController::class, 'activeByStore']);
 Route::get('potongan-member/active/{id_store}', [PotonganMemberController::class, 'activeByStore']);
+Route::get('meja/store/{id_store}', [MejaController::class, 'byStore']);
+Route::get('meja/{id_store}', [MejaController::class, 'byStore']);
 
 Route::apiResource('kategori', KategoriController::class)->except(['show']);
 Route::get('kategori/detail/{kategori}', [KategoriController::class, 'show']);
@@ -47,3 +50,5 @@ Route::apiResource('order-items', OrderItemController::class)->except(['show']);
 Route::get('order-items/detail/{order_item}', [OrderItemController::class, 'show']);
 Route::apiResource('profil', ProfilController::class)->except(['show']);
 Route::get('profil/detail/{profil}', [ProfilController::class, 'show']);
+Route::apiResource('meja', MejaController::class)->except(['show']);
+Route::get('meja/detail/{meja}', [MejaController::class, 'show']);
