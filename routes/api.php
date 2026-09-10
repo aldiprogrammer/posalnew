@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\MemberController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\OrderItemController;
 use App\Http\Controllers\Api\PenggunaController;
+use App\Http\Controllers\Api\PotonganMemberController;
 use App\Http\Controllers\Api\PpnController;
 use App\Http\Controllers\Api\ProdukController;
 use App\Http\Controllers\Api\ProfilController;
@@ -26,6 +27,10 @@ Route::get('profil/store/{id_store}', [ProfilController::class, 'byStore']);
 Route::get('profil/{id_store}', [ProfilController::class, 'byStore']);
 Route::get('ppn/store/{id_store}', [PpnController::class, 'byStore']);
 Route::get('ppn/{id_store}', [PpnController::class, 'byStore']);
+Route::get('potongan-member/store/{id_store}', [PotonganMemberController::class, 'byStore']);
+Route::get('potongan-member/{id_store}', [PotonganMemberController::class, 'byStore']);
+Route::get('potongan-member/active/store/{id_store}', [PotonganMemberController::class, 'activeByStore']);
+Route::get('potongan-member/active/{id_store}', [PotonganMemberController::class, 'activeByStore']);
 
 Route::apiResource('kategori', KategoriController::class)->except(['show']);
 Route::get('kategori/detail/{kategori}', [KategoriController::class, 'show']);

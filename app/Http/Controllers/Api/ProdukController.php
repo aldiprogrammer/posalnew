@@ -24,6 +24,7 @@ class ProdukController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
+            'kode_produk' => 'nullable|string|max:50|unique:produk,kode_produk',
             'kategori_id' => 'required|exists:kategori,id',
             'nama' => 'required|string|max:255',
             'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -32,6 +33,10 @@ class ProdukController extends Controller
             'diskon' => 'nullable|numeric|min:0',
             'stok' => 'required|in:tersedia,tidak tersedia',
         ]);
+
+        if (empty($validated['kode_produk'])) {
+            unset($validated['kode_produk']);
+        }
 
         if ($request->hasFile('foto')) {
             $validated['foto'] = $request->file('foto')->store('produk', 'public');
@@ -63,6 +68,7 @@ class ProdukController extends Controller
     public function update(Request $request, Produk $produk): JsonResponse
     {
         $validated = $request->validate([
+            'kode_produk' => 'nullable|string|max:50|unique:produk,kode_produk,'.$produk->id,
             'kategori_id' => 'required|exists:kategori,id',
             'nama' => 'required|string|max:255',
             'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -71,6 +77,10 @@ class ProdukController extends Controller
             'diskon' => 'nullable|numeric|min:0',
             'stok' => 'required|in:tersedia,tidak tersedia',
         ]);
+
+        if (empty($validated['kode_produk'])) {
+            unset($validated['kode_produk']);
+        }
 
         if ($request->hasFile('foto')) {
             if ($produk->foto) {

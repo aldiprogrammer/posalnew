@@ -21,6 +21,7 @@
                 <thead class="bg-gray-50 border-b border-gray-100">
                     <tr>
                         <th class="text-left px-6 py-3 font-medium text-gray-500">No</th>
+                        <th class="text-left px-6 py-3 font-medium text-gray-500">Kode</th>
                         <th class="text-left px-6 py-3 font-medium text-gray-500">Foto</th>
                         <th class="text-left px-6 py-3 font-medium text-gray-500">Nama</th>
                         <th class="text-left px-6 py-3 font-medium text-gray-500">Kategori</th>
@@ -34,6 +35,13 @@
                     @forelse ($produks as $produk)
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 text-gray-500">{{ $produks->firstItem() + $loop->index }}</td>
+                            <td class="px-6 py-4">
+                                @if ($produk->kode_produk)
+                                    <span class="font-mono text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">{{ $produk->kode_produk }}</span>
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
                             <td class="px-6 py-4">
                                 @if ($produk->foto)
                                     <img src="{{ $produk->foto_url }}" alt="{{ $produk->nama }}" class="w-10 h-10 rounded-lg object-cover border border-gray-200">
@@ -80,7 +88,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="px-6 py-12 text-center text-gray-400">
+                            <td colspan="9" class="px-6 py-12 text-center text-gray-400">
                                 Belum ada data produk.
                             </td>
                         </tr>
@@ -112,6 +120,22 @@
                 <form action="{{ route('admin.produk.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="px-6 py-4 space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Kode Produk</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="create-kode_produk" name="kode_produk" value="{{ old('kode_produk') }}" maxlength="50"
+                                       class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors font-mono"
+                                       placeholder="Kode produk (opsional)">
+                                <button type="button" onclick="generateKode('create-kode_produk')" class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors shrink-0" title="Generate kode otomatis">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                                    Acak
+                                </button>
+                                <button type="button" onclick="openScanner('create-kode_produk')" class="inline-flex items-center gap-1 bg-orange-100 text-orange-700 px-3 py-2 rounded-lg text-sm font-medium hover:bg-orange-200 transition-colors shrink-0" title="Scan barcode/QR">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                                    Scan
+                                </button>
+                            </div>
+                        </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Nama Produk <span class="text-red-500">*</span></label>
                             <input type="text" name="nama" value="{{ old('nama') }}" required
@@ -196,6 +220,22 @@
                     @method('PUT')
                     <div class="px-6 py-4 space-y-4">
                         <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Kode Produk</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="edit-kode_produk" name="kode_produk" maxlength="50"
+                                       class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors font-mono"
+                                       placeholder="Kode produk (opsional)">
+                                <button type="button" onclick="generateKode('edit-kode_produk')" class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors shrink-0" title="Generate kode otomatis">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                                    Acak
+                                </button>
+                                <button type="button" onclick="openScanner('edit-kode_produk')" class="inline-flex items-center gap-1 bg-orange-100 text-orange-700 px-3 py-2 rounded-lg text-sm font-medium hover:bg-orange-200 transition-colors shrink-0" title="Scan barcode/QR">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                                    Scan
+                                </button>
+                            </div>
+                        </div>
+                        <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Nama Produk <span class="text-red-500">*</span></label>
                             <input type="text" id="edit-nama" name="nama" required
                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
@@ -267,6 +307,25 @@
         </div>
     </div>
 
+    {{-- Modal Scanner --}}
+    <div id="modal-scanner" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="closeScanner()"></div>
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-md relative">
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                    <h3 class="text-lg font-semibold text-gray-800">Scan Barcode / QR Code</h3>
+                    <button onclick="closeScanner()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div id="scanner-reader" class="w-full rounded-lg overflow-hidden"></div>
+                    <p class="text-xs text-gray-400 text-center mt-3">Arahkan kamera ke barcode atau QR code</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @if ($errors->any())
         <script>
             document.addEventListener('DOMContentLoaded', function () {
@@ -279,6 +338,7 @@
 @endsection
 
 @push('scripts')
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
     function openModal(id) {
         document.getElementById(id).classList.remove('hidden');
@@ -304,10 +364,56 @@
         }
     }
 
+    function generateKode(inputId) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let kode = 'PRD-';
+        for (let i = 0; i < 5; i++) {
+            kode += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        document.getElementById(inputId).value = kode;
+    }
+
+    let html5QrCode = null;
+    let scannerTargetInput = null;
+
+    function openScanner(targetInputId) {
+        scannerTargetInput = targetInputId;
+        document.getElementById('modal-scanner').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+
+        html5QrCode = new Html5Qrcode('scanner-reader');
+        html5QrCode.start(
+            { facingMode: 'environment' },
+            { fps: 10, qrbox: { width: 250, height: 150 } },
+            function onScanSuccess(decodedText) {
+                document.getElementById(scannerTargetInput).value = decodedText;
+                closeScanner();
+            },
+            function onScanFailure() {}
+        ).catch(function(err) {
+            alert('Tidak dapat mengakses kamera. Pastikan kamera diizinkan.\n' + err);
+            closeScanner();
+        });
+    }
+
+    function closeScanner() {
+        if (html5QrCode && html5QrCode.isScanning) {
+            html5QrCode.stop().then(function() {
+                html5QrCode.clear();
+                html5QrCode = null;
+            }).catch(function() {
+                html5QrCode = null;
+            });
+        }
+        document.getElementById('modal-scanner').classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
     function openEditModal(produk) {
         const form = document.getElementById('form-edit');
         form.action = '/admin/produk/' + produk.id;
 
+        document.getElementById('edit-kode_produk').value = produk.kode_produk || '';
         document.getElementById('edit-nama').value = produk.nama || '';
         document.getElementById('edit-kategori_id').value = produk.kategori_id || '';
         document.getElementById('edit-keterangan').value = produk.keterangan || '';

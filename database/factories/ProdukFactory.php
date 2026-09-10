@@ -13,6 +13,7 @@ class ProdukFactory extends Factory
     public function definition(): array
     {
         return [
+            'kode_produk' => 'PRD-'.strtoupper(fake()->unique()->bothify('#####')),
             'kategori_id' => Kategori::factory(),
             'nama' => fake()->unique()->words(2, true),
             'keterangan' => fake()->sentence(),
