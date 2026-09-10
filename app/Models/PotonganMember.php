@@ -5,7 +5,6 @@ namespace App\Models;
 use Database\Factories\PotonganMemberFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PotonganMember extends Model
 {
@@ -15,7 +14,6 @@ class PotonganMember extends Model
     protected $table = 'potongan_member';
 
     protected $fillable = [
-        'member_id',
         'jenis',
         'nominal',
         'tanggal_mulai',
@@ -29,11 +27,6 @@ class PotonganMember extends Model
             'tanggal_mulai' => 'date',
             'tanggal_akhir' => 'date',
         ];
-    }
-
-    public function member(): BelongsTo
-    {
-        return $this->belongsTo(Member::class);
     }
 
     public function getNominalFormattedAttribute(): string

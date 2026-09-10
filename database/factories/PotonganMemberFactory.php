@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Member;
 use App\Models\PotonganMember;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -13,7 +12,6 @@ class PotonganMemberFactory extends Factory
     public function definition(): array
     {
         return [
-            'member_id' => Member::factory(),
             'jenis' => fake()->randomElement(['diskon', 'rupiah']),
             'nominal' => fake()->numberBetween(5, 50),
             'tanggal_mulai' => fake()->dateTimeBetween('now', '+1 month'),

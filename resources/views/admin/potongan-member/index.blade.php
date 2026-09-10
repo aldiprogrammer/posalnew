@@ -1,17 +1,9 @@
-@extends('layouts.admin', ['title' => $member ? 'Potongan - ' . $member->nama : 'Potongan Member'])
+@extends('layouts.admin', ['title' => 'Potongan Member'])
 
 @section('content')
     <div class="flex items-center justify-between mb-6">
         <div>
-            <a href="{{ $member ? route('admin.member.index') : route('admin.potongan-member.index') }}" class="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-orange-600 transition-colors mb-1">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                Kembali
-            </a>
-            @if ($member)
-                <p class="text-gray-600">Potongan untuk <span class="font-medium text-gray-800">{{ $member->nama }}</span> ({{ $member->nik }})</p>
-            @else
-                <p class="text-gray-600">Semua data potongan member.</p>
-            @endif
+            <p class="text-gray-600">Kelola potongan global untuk semua member. Potongan yang aktif berlaku bagi seluruh member yang sudah terdaftar.</p>
         </div>
         <button onclick="openModal('modal-create')" class="inline-flex items-center gap-2 bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
@@ -31,9 +23,6 @@
                 <thead class="bg-gray-50 border-b border-gray-100">
                     <tr>
                         <th class="text-left px-6 py-3 font-medium text-gray-500">No</th>
-                        @if (!$member)
-                        <th class="text-left px-6 py-3 font-medium text-gray-500">Member</th>
-                        @endif
                         <th class="text-left px-6 py-3 font-medium text-gray-500">Jenis</th>
                         <th class="text-right px-6 py-3 font-medium text-gray-500">Nominal</th>
                         <th class="text-left px-6 py-3 font-medium text-gray-500">Berlaku</th>
@@ -48,9 +37,6 @@
                         @endphp
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 text-gray-500">{{ $potongans->firstItem() + $loop->index }}</td>
-                            @if (!$member)
-                            <td class="px-6 py-4 font-medium text-gray-800">{{ $potongan->member->nama ?? '-' }}</td>
-                            @endif
                             <td class="px-6 py-4">
                                 @if ($potongan->jenis === 'diskon')
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">Diskon</span>
@@ -83,7 +69,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="{{ $member ? 6 : 7 }}" class="px-6 py-12 text-center text-gray-400">
+                            <td colspan="6" class="px-6 py-12 text-center text-gray-400">
                                 Belum ada data potongan.
                             </td>
                         </tr>
@@ -112,22 +98,7 @@
                 </div>
                 <form action="{{ route('admin.potongan-member.store') }}" method="POST">
                     @csrf
-                    @if ($member)
-                    <input type="hidden" name="member_id" value="{{ $member->id }}">
-                    @endif
                     <div class="px-6 py-4 space-y-4">
-                        @if (!$member)
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Member <span class="text-red-500">*</span></label>
-                            <select name="member_id" required
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors">
-                                <option value="">Pilih Member</option>
-                                @foreach ($members as $m)
-                                    <option value="{{ $m->id }}" {{ old('member_id') == $m->id ? 'selected' : '' }}>{{ $m->nama }} ({{ $m->nik }})</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @endif
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Potongan <span class="text-red-500">*</span></label>
                             <div class="flex gap-4">
