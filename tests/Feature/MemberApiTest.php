@@ -25,6 +25,7 @@ class MemberApiTest extends TestCase
     public function test_bisa_menambahkan_member(): void
     {
         $this->postJson('/api/member', [
+            'id_store' => '1',
             'nama' => 'Budi',
             'nik' => '3201234567890001',
             'alamat' => 'Jl. Merdeka No. 10',
@@ -34,7 +35,7 @@ class MemberApiTest extends TestCase
             ->assertJsonPath('success', true)
             ->assertJsonPath('data.nama', 'Budi');
 
-        $this->assertDatabaseHas('member', ['nik' => '3201234567890001']);
+        $this->assertDatabaseHas('member', ['nik' => '3201234567890001', 'id_store' => '1']);
     }
 
     public function test_validasi_nik_wajib_dan_unik(): void
@@ -43,9 +44,9 @@ class MemberApiTest extends TestCase
 
         $this->postJson('/api/member', ['nama' => 'Siti', 'nik' => '', 'tanggal_bergabung' => '2026-02-01'])
             ->assertStatus(422)
-            ->assertJsonValidationErrors(['nik']);
+            ->assertJsonValidationErrors(['nik', 'id_store']);
 
-        $this->postJson('/api/member', ['nama' => 'Siti', 'nik' => '3201234567890001', 'tanggal_bergabung' => '2026-02-01'])
+        $this->postJson('/api/member', ['id_store' => '1', 'nama' => 'Siti', 'nik' => '3201234567890001', 'tanggal_bergabung' => '2026-02-01'])
             ->assertStatus(422)
             ->assertJsonValidationErrors(['nik']);
     }
@@ -55,6 +56,7 @@ class MemberApiTest extends TestCase
         $member = Member::create(['nama' => 'Budi', 'nik' => '3201234567890001', 'tanggal_bergabung' => '2026-01-01']);
 
         $this->putJson("/api/member/{$member->id}", [
+            'id_store' => '1',
             'nama' => 'Budi Santoso',
             'nik' => '3201234567890001',
             'tanggal_bergabung' => '2026-01-01',

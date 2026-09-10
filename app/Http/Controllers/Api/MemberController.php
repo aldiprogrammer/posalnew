@@ -23,6 +23,7 @@ class MemberController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
+            'id_store' => 'required|string|max:255',
             'nama' => 'required|string|max:255',
             'nik' => 'required|string|max:20|unique:member,nik',
             'alamat' => 'nullable|string',
@@ -50,8 +51,9 @@ class MemberController extends Controller
     public function update(Request $request, Member $member): JsonResponse
     {
         $validated = $request->validate([
+            'id_store' => 'required|string|max:255',
             'nama' => 'required|string|max:255',
-            'nik' => 'required|string|max:20|unique:member,nik,'.$member->id,
+            'nik' => 'required|string|max:20|unique:member,nik,' . $member->id,
             'alamat' => 'nullable|string',
             'tanggal_bergabung' => 'required|date',
         ]);
@@ -71,7 +73,7 @@ class MemberController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Daftar member untuk store '.$id_store,
+            'message' => 'Daftar member untuk store ' . $id_store,
             'data' => $members,
         ]);
     }

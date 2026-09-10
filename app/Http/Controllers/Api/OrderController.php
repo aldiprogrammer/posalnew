@@ -27,6 +27,7 @@ class OrderController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
+            'id_store' => 'required|string|max:255',
             'kode_order' => 'required|string|unique:order,kode_order',
             'total_harga' => 'required|numeric|min:0',
             'diskon' => 'nullable|numeric|min:0',
@@ -66,6 +67,7 @@ class OrderController extends Controller
     public function update(Request $request, Order $order): JsonResponse
     {
         $validated = $request->validate([
+            'id_store' => 'required|string|max:255',
             'kode_order' => 'required|string|unique:order,kode_order,'.$order->id,
             'total_harga' => 'required|numeric|min:0',
             'diskon' => 'nullable|numeric|min:0',

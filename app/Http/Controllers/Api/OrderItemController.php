@@ -27,6 +27,7 @@ class OrderItemController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
+            'id_store' => 'required|string|max:255',
             'kode_order' => ['required', 'string', Rule::exists('order', 'kode_order')],
             'produk_id' => 'required|exists:produk,id',
             'harga' => 'required|numeric|min:0',
@@ -63,6 +64,7 @@ class OrderItemController extends Controller
     public function update(Request $request, Pesanan $order_item): JsonResponse
     {
         $validated = $request->validate([
+            'id_store' => 'required|string|max:255',
             'kode_order' => ['required', 'string', Rule::exists('order', 'kode_order')],
             'produk_id' => 'required|exists:produk,id',
             'harga' => 'required|numeric|min:0',

@@ -38,6 +38,7 @@ class OrderItemApiTest extends TestCase
         );
 
         return array_merge([
+            'id_store' => '1',
             'kode_order' => 'ORD-001',
             'produk_id' => $produk->id,
             'harga' => 15000,
@@ -69,7 +70,7 @@ class OrderItemApiTest extends TestCase
             ->assertJsonPath('data.qty', 2)
             ->assertJsonPath('data.pembayaran', 'transfer');
 
-        $this->assertDatabaseHas('order_items', ['kode_order' => 'ORD-001']);
+        $this->assertDatabaseHas('order_items', ['kode_order' => 'ORD-001', 'id_store' => '1']);
     }
 
     public function test_kode_order_harus_ada_di_tabel_order(): void

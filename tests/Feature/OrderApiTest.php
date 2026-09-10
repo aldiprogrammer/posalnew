@@ -23,6 +23,7 @@ class OrderApiTest extends TestCase
         );
 
         return array_merge([
+            'id_store' => '1',
             'kode_order' => 'ORD-001',
             'total_harga' => 30000,
             'diskon' => 5000,
@@ -69,7 +70,7 @@ class OrderApiTest extends TestCase
             ->assertJsonPath('data.kode_order', 'ORD-001')
             ->assertJsonPath('data.pembayaran', 'tunai');
 
-        $this->assertDatabaseHas('order', ['kode_order' => 'ORD-001']);
+        $this->assertDatabaseHas('order', ['kode_order' => 'ORD-001', 'id_store' => '1']);
     }
 
     public function test_validasi_kode_order_wajib_dan_unik(): void
