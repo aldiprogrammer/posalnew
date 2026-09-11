@@ -32,7 +32,7 @@ class OrderController extends Controller
             'total_harga' => 'required|numeric|min:0',
             'diskon' => 'nullable|numeric|min:0',
             'member_id' => 'nullable|exists:member,id',
-            'meja' => 'required|string|max:255',
+            'meja' => 'string|max:255',
             'pembayaran' => 'nullable|string|max:255',
             'uang' => 'nullable|numeric|min:0',
             'kembalian' => 'nullable|numeric|min:0',
@@ -68,11 +68,11 @@ class OrderController extends Controller
     {
         $validated = $request->validate([
             'id_store' => 'required|string|max:255',
-            'kode_order' => 'required|string|unique:order,kode_order,'.$order->id,
+            'kode_order' => 'required|string|unique:order,kode_order,' . $order->id,
             'total_harga' => 'required|numeric|min:0',
             'diskon' => 'nullable|numeric|min:0',
             'member_id' => 'nullable|exists:member,id',
-            'meja' => 'required|string|max:255',
+            'meja' => 'string|max:255',
             'pembayaran' => 'nullable|string|max:255',
             'uang' => 'nullable|numeric|min:0',
             'kembalian' => 'nullable|numeric|min:0',
@@ -102,7 +102,7 @@ class OrderController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Daftar order untuk store '.$id_store,
+            'message' => 'Daftar order untuk store ' . $id_store,
             'data' => $orders,
         ]);
     }
