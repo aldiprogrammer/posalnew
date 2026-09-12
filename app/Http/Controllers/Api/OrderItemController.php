@@ -12,8 +12,6 @@ use Illuminate\Validation\Rule;
 
 class OrderItemController extends Controller
 {
-    private const SATUAN_VALID = ['besar', 'kecil'];
-
     public function index(): JsonResponse
     {
         $items = Pesanan::with(['produk', 'kasir'])
@@ -36,7 +34,6 @@ class OrderItemController extends Controller
             'produk_id' => 'required|exists:produk,id',
             'harga' => 'required|numeric|min:0',
             'qty' => 'required|integer|min:1',
-            'satuan' => ['nullable', 'string', Rule::in(self::SATUAN_VALID)],
             'diskon' => 'nullable|numeric|min:0',
             'tanggal' => 'required|date',
             'kasir_id' => 'nullable|string|max:255',
@@ -44,17 +41,10 @@ class OrderItemController extends Controller
         ]);
 
         $validated['diskon'] = $validated['diskon'] ?? 0;
-        $validated['satuan'] = $validated['satuan'] ?? 'kecil';
 
         $item = Pesanan::create($validated);
 
-        $user = User::find($item->id_store);
-        if ($user && $user->jenis_usaha === 'Toko') {
-            $produk = Produk::withoutGlobalScope('store')->find($item->produk_id);
-            if ($produk) {
-                $this->ubahStok($produk, -$this->stokPcs($produk, $item->qty, $item->satuan));
-            }
-        }
+        $this->kurangiStok($item);
 
         $item->load(['produk', 'kasir']);
 
@@ -84,7 +74,6 @@ class OrderItemController extends Controller
             'produk_id' => 'required|exists:produk,id',
             'harga' => 'required|numeric|min:0',
             'qty' => 'required|integer|min:1',
-            'satuan' => ['nullable', 'string', Rule::in(self::SATUAN_VALID)],
             'diskon' => 'nullable|numeric|min:0',
             'tanggal' => 'required|date',
             'kasir_id' => 'nullable|string|max:255',
@@ -92,7 +81,6 @@ class OrderItemController extends Controller
         ]);
 
         $validated['diskon'] = $validated['diskon'] ?? 0;
-        $validated['satuan'] = $validated['satuan'] ?? 'kecil';
 
         $user = User::find($order_item->id_store);
         $produk = null;
@@ -101,13 +89,13 @@ class OrderItemController extends Controller
         }
 
         $oldPcs = $produk
-            ? $this->stokPcs($produk, (int) $order_item->getOriginal('qty'), $order_item->getOriginal('satuan') ?? 'kecil')
+            ? $this->toPcs($produk, (int) $order_item->getOriginal('qty'), $order_item->getOriginal('harga'))
             : 0;
 
         $order_item->update($validated);
 
         if ($produk) {
-            $newPcs = $this->stokPcs($produk, $validated['qty'], $validated['satuan']);
+            $newPcs = $this->toPcs($produk, $validated['qty'], $validated['harga']);
             $this->ubahStok($produk, $oldPcs - $newPcs);
         }
 
@@ -120,11 +108,30 @@ class OrderItemController extends Controller
         ]);
     }
 
-    private function stokPcs(Produk $produk, int $qty, string $satuan): int
+    private function kurangiStok(Pesanan $item): void
     {
-        $isi = $produk->isi !== null && $produk->isi > 0 ? $produk->isi : 1;
+        $user = User::find($item->id_store);
+        if (! $user || $user->jenis_usaha !== 'Toko') {
+            return;
+        }
 
-        return $satuan === 'besar' ? $qty * $isi : $qty;
+        $produk = Produk::withoutGlobalScope('store')->find($item->produk_id);
+        if (! $produk) {
+            return;
+        }
+
+        $this->ubahStok($produk, -$this->toPcs($produk, $item->qty, $item->harga));
+    }
+
+    private function toPcs(Produk $produk, int $qty, mixed $harga): int
+    {
+        if (($produk->harga_satuan_besar ?? null) !== null && (int) $harga === (int) $produk->harga_satuan_besar) {
+            $isi = $produk->isi !== null && $produk->isi > 0 ? $produk->isi : 1;
+
+            return $qty * $isi;
+        }
+
+        return $qty;
     }
 
     private function ubahStok(Produk $produk, int $deltaPcs): void
