@@ -10,17 +10,17 @@
 
     <div class="w-full max-w-md">
         {{-- Logo --}}
-        <div class="flex flex-col items-center mb-8">
-            <div class="w-14 h-14 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center font-bold text-2xl text-white mb-3">P</div>
-            <h1 class="text-2xl font-bold text-white tracking-wide">POS Admin</h1>
-            <p class="text-orange-100 text-sm mt-1">Masuk untuk mengelola aplikasi</p>
+        <div class="flex flex-col items-center">
+            <img src="{{ asset('logo/logonew.png') }}" alt="Logo"
+                 class="object-contain" style="height: 100px">
+            <p class="text-orange-100 text-sm mb-4 mt-4">Masuk untuk mengelola aplikasi</p>
         </div>
 
         {{-- Card --}}
         <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
             <div class="px-8 py-6 border-b border-gray-100">
                 <h2 class="text-lg font-semibold text-gray-800">Login</h2>
-                <p class="text-sm text-gray-500 mt-0.5">Silakan masuk dengan akun Anda</p>
+                <p class="text-sm text-gray-500 ">Silakan masuk dengan akun Anda</p>
             </div>
 
             <form action="{{ route('login.attempt') }}" method="POST" class="px-8 py-6 space-y-4">

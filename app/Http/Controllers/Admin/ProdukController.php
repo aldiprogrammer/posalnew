@@ -46,21 +46,35 @@ class ProdukController extends Controller
     public function store(Request $request)
     {
         $modeSatuan = $this->modeSatuan();
+        $pakaiSatuanBesar = $request->input('pakai_satuan_besar') === '1';
 
         $rules = $this->rules();
         $rules['harga'] = $modeSatuan ? 'nullable|numeric|min:0' : 'required|numeric|min:0';
 
+        if ($modeSatuan && ! $pakaiSatuanBesar) {
+            $rules['satuan_kecil'] = 'required|string|max:100|in:'.implode(',', self::SATUAN_LIST);
+            $rules['harga_satuan_kecil'] = 'required|numeric|min:0';
+            $rules['qty_all'] = 'required|integer|min:0';
+        }
+
         $validated = $request->validate($rules);
+
+        unset($validated['pakai_satuan_besar']);
+
+        $validated = $this->normalizeSatuan($validated);
 
         if ($modeSatuan) {
             unset($validated['harga'], $validated['diskon']);
+            if (! $pakaiSatuanBesar) {
+                foreach (['satuan_besar', 'isi', 'qty', 'harga_satuan_besar'] as $field) {
+                    $validated[$field] = null;
+                }
+            }
         } else {
             foreach (self::SATUAN_FIELDS as $field) {
                 unset($validated[$field]);
             }
         }
-
-        $validated = $this->normalizeSatuan($validated);
 
         if (empty($validated['kode_produk'])) {
             unset($validated['kode_produk']);
@@ -79,21 +93,35 @@ class ProdukController extends Controller
     public function update(Request $request, Produk $produk)
     {
         $modeSatuan = $this->modeSatuan();
+        $pakaiSatuanBesar = $request->input('pakai_satuan_besar') === '1';
 
         $rules = $this->rules($produk->id);
         $rules['harga'] = $modeSatuan ? 'nullable|numeric|min:0' : 'required|numeric|min:0';
 
+        if ($modeSatuan && ! $pakaiSatuanBesar) {
+            $rules['satuan_kecil'] = 'required|string|max:100|in:'.implode(',', self::SATUAN_LIST);
+            $rules['harga_satuan_kecil'] = 'required|numeric|min:0';
+            $rules['qty_all'] = 'required|integer|min:0';
+        }
+
         $validated = $request->validate($rules);
+
+        unset($validated['pakai_satuan_besar']);
+
+        $validated = $this->normalizeSatuan($validated);
 
         if ($modeSatuan) {
             unset($validated['harga'], $validated['diskon']);
+            if (! $pakaiSatuanBesar) {
+                foreach (['satuan_besar', 'isi', 'qty', 'harga_satuan_besar'] as $field) {
+                    $validated[$field] = null;
+                }
+            }
         } else {
             foreach (self::SATUAN_FIELDS as $field) {
                 unset($validated[$field]);
             }
         }
-
-        $validated = $this->normalizeSatuan($validated);
 
         if (empty($validated['kode_produk'])) {
             unset($validated['kode_produk']);
@@ -138,6 +166,7 @@ class ProdukController extends Controller
             'keterangan' => 'nullable|string',
             'diskon' => 'nullable|numeric|min:0',
             'stok' => 'required|in:tersedia,tidak tersedia',
+            'pakai_satuan_besar' => 'nullable|in:0,1',
             'satuan_besar' => 'nullable|string|max:100|in:'.implode(',', self::SATUAN_LIST),
             'isi' => 'nullable|integer|min:0',
             'qty' => 'nullable|integer|min:0',

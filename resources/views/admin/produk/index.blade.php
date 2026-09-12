@@ -217,11 +217,20 @@
                         </div>
                         @if ($modeSatuan)
                         <div class="border-t border-gray-100 pt-4">
-                            <p class="text-sm font-semibold text-gray-700 mb-3">Satuan & Kuantitas</p>
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <p class="text-sm font-semibold text-gray-700">Satuan & Kuantitas</p>
+                                <label class="flex items-center gap-2 cursor-pointer select-none">
+                                    <span class="text-sm text-gray-500">Satuan Besar</span>
+                                    <input type="checkbox" id="create-pakai_satuan_besar" name="pakai_satuan_besar" value="1"
+                                           class="w-4 h-4 text-orange-600 focus:ring-orange-500"
+                                           onchange="toggleSatuanBesar('modal-create')">
+                                </label>
+                            </div>
+
+                            <div id="create-group-besar" class="grid grid-cols-2 gap-4 hidden">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Satuan Besar</label>
-                                    <select name="satuan_besar"
+                                    <select name="satuan_besar" disabled
                                             class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors">
                                         <option value="">-- Pilih Satuan --</option>
                                         @foreach ($satuanList as $satuan)
@@ -242,6 +251,14 @@
                                            placeholder="Qty satuan besar">
                                 </div>
                                 <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Harga Satuan Besar</label>
+                                    <input type="number" id="create-harga_satuan_besar" name="harga_satuan_besar" value="{{ old('harga_satuan_besar') }}" min="0" oninput="hitungSatuan('modal-create')"
+                                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
+                                           placeholder="0">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 mt-4">
+                                <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Satuan Kecil</label>
                                     <select name="satuan_kecil"
                                             class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors">
@@ -252,25 +269,19 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Harga Satuan Besar</label>
-                                    <input type="number" id="create-harga_satuan_besar" name="harga_satuan_besar" value="{{ old('harga_satuan_besar') }}" min="0" oninput="hitungSatuan('modal-create')"
-                                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
-                                           placeholder="0">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Qty All (isi × qty)</label>
-                                    <input type="number" id="create-qty_all" name="qty_all" value="{{ old('qty_all') }}" readonly
-                                           class="w-full border border-gray-200 bg-gray-50 text-gray-500 rounded-lg px-3 py-2 text-sm font-mono"
-                                           placeholder="0">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Harga Satuan Kecil</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Harga</label>
                                     <input type="number" id="create-harga_satuan_kecil" name="harga_satuan_kecil" value="{{ old('harga_satuan_kecil') }}" min="0"
                                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
                                            placeholder="0">
                                 </div>
+                                <div class="col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Qty All</label>
+                                    <input type="number" id="create-qty_all" name="qty_all" value="{{ old('qty_all') }}" readonly
+                                           class="w-full border border-gray-200 bg-gray-50 text-gray-500 rounded-lg px-3 py-2 text-sm font-mono"
+                                           placeholder="0">
+                                </div>
                             </div>
-                            <p class="mt-2 text-xs text-gray-400">Qty All otomatis = Isi × Qty.</p>
+                            <p class="mt-2 text-xs text-gray-400">Aktifkan Satuan Besar untuk hitung Qty All otomatis (Isi × Qty).</p>
                         </div>
                         @endif
                     </div>
@@ -380,11 +391,20 @@
                         </div>
                         @if ($modeSatuan)
                         <div class="border-t border-gray-100 pt-4">
-                            <p class="text-sm font-semibold text-gray-700 mb-3">Satuan & Kuantitas</p>
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <p class="text-sm font-semibold text-gray-700">Satuan & Kuantitas</p>
+                                <label class="flex items-center gap-2 cursor-pointer select-none">
+                                    <span class="text-sm text-gray-500">Satuan Besar</span>
+                                    <input type="checkbox" id="edit-pakai_satuan_besar" name="pakai_satuan_besar" value="1"
+                                           class="w-4 h-4 text-orange-600 focus:ring-orange-500"
+                                           onchange="toggleSatuanBesar('modal-edit')">
+                                </label>
+                            </div>
+
+                            <div id="edit-group-besar" class="grid grid-cols-2 gap-4 hidden">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Satuan Besar</label>
-                                    <select id="edit-satuan_besar" name="satuan_besar"
+                                    <select id="edit-satuan_besar" name="satuan_besar" disabled
                                             class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors">
                                         <option value="">-- Pilih Satuan --</option>
                                         @foreach ($satuanList as $satuan)
@@ -405,6 +425,14 @@
                                            placeholder="Qty satuan besar">
                                 </div>
                                 <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Harga Satuan Besar</label>
+                                    <input type="number" id="edit-harga_satuan_besar" name="harga_satuan_besar" min="0" oninput="hitungSatuan('modal-edit')"
+                                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
+                                           placeholder="0">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 mt-4">
+                                <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Satuan Kecil</label>
                                     <select id="edit-satuan_kecil" name="satuan_kecil"
                                             class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors">
@@ -415,25 +443,19 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Harga Satuan Besar</label>
-                                    <input type="number" id="edit-harga_satuan_besar" name="harga_satuan_besar" min="0" oninput="hitungSatuan('modal-edit')"
-                                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
-                                           placeholder="0">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Qty All (isi × qty)</label>
-                                    <input type="number" id="edit-qty_all" name="qty_all" readonly
-                                           class="w-full border border-gray-200 bg-gray-50 text-gray-500 rounded-lg px-3 py-2 text-sm font-mono"
-                                           placeholder="0">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Harga Satuan Kecil</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Harga</label>
                                     <input type="number" id="edit-harga_satuan_kecil" name="harga_satuan_kecil" min="0"
                                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
                                            placeholder="0">
                                 </div>
+                                <div class="col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Qty All</label>
+                                    <input type="number" id="edit-qty_all" name="qty_all" readonly
+                                           class="w-full border border-gray-200 bg-gray-50 text-gray-500 rounded-lg px-3 py-2 text-sm font-mono"
+                                           placeholder="0">
+                                </div>
                             </div>
-                            <p class="mt-2 text-xs text-gray-400">Qty All otomatis = Isi × Qty.</p>
+                            <p class="mt-2 text-xs text-gray-400">Aktifkan Satuan Besar untuk hitung Qty All otomatis (Isi × Qty).</p>
                         </div>
                         @endif
                     </div>
@@ -512,6 +534,29 @@
         document.getElementById(inputId).value = kode;
     }
 
+    function toggleSatuanBesar(modalId) {
+        const prefix = modalId === 'modal-create' ? 'create-' : 'edit-';
+        const aktif = document.getElementById(prefix + 'pakai_satuan_besar').checked;
+        const group = document.getElementById(prefix + 'group-besar');
+        const qtyAll = document.getElementById(prefix + 'qty_all');
+        const inputs = group.querySelectorAll('input, select');
+
+        if (aktif) {
+            group.classList.remove('hidden');
+            inputs.forEach(el => el.disabled = false);
+            qtyAll.readOnly = true;
+            qtyAll.classList.add('bg-gray-50', 'text-gray-500', 'font-mono');
+            qtyAll.classList.remove('border-gray-300');
+            hitungSatuan(modalId);
+        } else {
+            group.classList.add('hidden');
+            inputs.forEach(el => el.disabled = true);
+            qtyAll.readOnly = false;
+            qtyAll.classList.remove('bg-gray-50', 'text-gray-500', 'font-mono');
+            qtyAll.classList.add('border-gray-300');
+        }
+    }
+
     function hitungSatuan(modalId) {
         const prefix = modalId === 'modal-create' ? 'create-' : 'edit-';
         const isi = parseInt(document.getElementById(prefix + 'isi').value) || 0;
@@ -583,6 +628,9 @@
             sKecil.value = produk.satuan_kecil || '';
             sQtyAll.value = produk.qty_all ?? '';
             sHargaKecil.value = produk.harga_satuan_kecil ?? '';
+
+            document.getElementById('edit-pakai_satuan_besar').checked = produk.satuan_besar !== null;
+            toggleSatuanBesar('modal-edit');
         }
 
         document.getElementById('edit-stok-t').checked = produk.stok === 'tersedia';
@@ -600,6 +648,10 @@
         }
 
         openModal('modal-edit');
+    }
+
+    if (document.getElementById('create-pakai_satuan_besar')) {
+        toggleSatuanBesar('modal-create');
     }
 </script>
 @endpush
