@@ -25,6 +25,13 @@ class Produk extends Model
         'harga',
         'diskon',
         'stok',
+        'satuan_besar',
+        'isi',
+        'qty',
+        'harga_satuan_besar',
+        'satuan_kecil',
+        'qty_all',
+        'harga_satuan_kecil',
     ];
 
     protected function casts(): array
@@ -32,6 +39,11 @@ class Produk extends Model
         return [
             'harga' => 'integer',
             'diskon' => 'integer',
+            'isi' => 'integer',
+            'qty' => 'integer',
+            'harga_satuan_besar' => 'integer',
+            'qty_all' => 'integer',
+            'harga_satuan_kecil' => 'integer',
         ];
     }
 

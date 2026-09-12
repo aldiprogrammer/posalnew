@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\InventarisController;
 use App\Http\Controllers\Admin\JabatanController;
 use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Admin\LaporanOrderController;
@@ -39,6 +40,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::resource('produk', ProdukController::class)->except(['show', 'create', 'edit']);
     Route::resource('meja', MejaController::class)->except(['show', 'create', 'edit']);
     Route::get('meja-export-pdf', [MejaController::class, 'exportPdf'])->name('meja.export-pdf');
+    Route::resource('inventaris', InventarisController::class)->except(['show', 'create', 'edit']);
+    Route::post('inventaris/export-label', [InventarisController::class, 'exportLabel'])->name('inventaris.export-label');
     Route::resource('member', MemberController::class)->except(['show', 'create', 'edit']);
     Route::resource('potongan-member', PotonganMemberController::class)->except(['show', 'create', 'edit']);
     Route::resource('ppn', PpnController::class)->except(['show', 'create', 'edit']);
@@ -46,6 +49,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::resource('pesanan', PesananController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('order', OrderController::class)->only(['index', 'destroy']);
     Route::get('laporan-order', [LaporanOrderController::class, 'index'])->name('laporan-order.index');
+    Route::get('laporan-order/export-pdf', [LaporanOrderController::class, 'exportPdf'])->name('laporan-order.export-pdf');
+    Route::get('laporan-order/export-excel', [LaporanOrderController::class, 'exportExcel'])->name('laporan-order.export-excel');
     Route::get('profil', [ProfilController::class, 'edit'])->name('profil.edit');
     Route::put('profil', [ProfilController::class, 'update'])->name('profil.update');
 });

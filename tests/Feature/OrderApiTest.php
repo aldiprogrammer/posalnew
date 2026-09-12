@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Pengguna;
 use App\Models\Pesanan;
 use App\Models\Produk;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -135,5 +136,76 @@ class OrderApiTest extends TestCase
             ->assertJsonPath('success', true);
 
         $this->assertDatabaseMissing('order', ['id' => $order->id]);
+    }
+
+    private function buatOrderItem(int $produkId, int $qty, string $jenisUsaha = 'Toko', string $kodeOrder = 'ORD-001'): void
+    {
+        User::factory()->create(['id' => 1, 'jenis_usaha' => $jenisUsaha]);
+
+        $this->kirimOrderItem($produkId, $qty, $kodeOrder);
+    }
+
+    private function kirimOrderItem(int $produkId, int $qty, string $kodeOrder = 'ORD-001'): void
+    {
+        Order::create($this->buatOrder(['kode_order' => $kodeOrder]));
+
+        $this->postJson('/api/order-items', [
+            'id_store' => '1',
+            'kode_order' => $kodeOrder,
+            'produk_id' => $produkId,
+            'harga' => 5000,
+            'qty' => $qty,
+            'tanggal' => '2026-09-12',
+        ])->assertCreated()->assertJsonPath('success', true);
+    }
+
+    private function buatProduk(array $overrides = []): Produk
+    {
+        $kategori = Kategori::create(['nama' => 'Sembako']);
+
+        return Produk::create(array_merge([
+            'nama' => 'Sabun',
+            'kategori_id' => $kategori->id,
+            'harga' => 5000,
+            'qty_all' => 100,
+        ], $overrides));
+    }
+
+    public function test_order_item_mengurangi_qty_all_produk(): void
+    {
+        $produk = $this->buatProduk();
+
+        $this->buatOrderItem($produk->id, 3);
+
+        $this->assertSame(97, Produk::find($produk->id)->qty_all);
+    }
+
+    public function test_qty_all_tidak_bisa_negatif(): void
+    {
+        $produk = $this->buatProduk(['qty_all' => 2]);
+
+        $this->buatOrderItem($produk->id, 5);
+
+        $this->assertSame(0, Produk::find($produk->id)->qty_all);
+    }
+
+    public function test_qty_all_null_tidak_berubah_saat_order_item_dibuat(): void
+    {
+        $produk = $this->buatProduk(['qty_all' => null]);
+
+        $this->buatOrderItem($produk->id, 2);
+
+        $this->assertNull(Produk::find($produk->id)->qty_all);
+    }
+
+    public function test_usaha_bukan_toko_tidak_mengurangi_qty_all(): void
+    {
+        $produk = $this->buatProduk();
+        User::factory()->create(['id' => 1, 'jenis_usaha' => 'Restoran']);
+
+        $this->kirimOrderItem($produk->id, 3, 'ORD-002');
+        $this->kirimOrderItem($produk->id, 2, 'ORD-003');
+
+        $this->assertSame(100, Produk::find($produk->id)->qty_all);
     }
 }

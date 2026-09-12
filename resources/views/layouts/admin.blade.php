@@ -103,13 +103,40 @@
                     PPN
                 </a>
 
-                <a href="{{ route('admin.order.index') }}"
-                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('admin.order.*') ? 'bg-orange-700 text-white' : 'text-orange-100 hover:bg-orange-500 hover:text-white' }}">
+                <a href="{{ route('admin.inventaris.index') }}"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('admin.inventaris.*') ? 'bg-orange-700 text-white' : 'text-orange-100 hover:bg-orange-500 hover:text-white' }}">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7H21M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7M3 7l2-4h14l2 4M12 7v14m-4-8h8"/>
                     </svg>
-                    Order
+                    Inventaris
                 </a>
+
+                {{-- Order dropdown --}}
+                <div id="order-menu">
+                    <button type="button" id="order-menu-toggle"
+                            class="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('admin.order.*') || request()->routeIs('admin.pesanan.*') ? 'bg-orange-700 text-white' : 'text-orange-100 hover:bg-orange-500 hover:text-white' }}">
+                        <span class="flex items-center gap-3">
+                            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            Order
+                        </span>
+                        <svg id="order-menu-chevron" class="w-4 h-4 shrink-0 transition-transform {{ request()->routeIs('admin.order.*') || request()->routeIs('admin.pesanan.*') ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+
+                    <div id="order-menu-items" class="mt-1 space-y-1 pl-4 {{ request()->routeIs('admin.order.*') || request()->routeIs('admin.pesanan.*') ? '' : 'hidden' }}">
+                        <a href="{{ route('admin.order.index') }}"
+                           class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('admin.order.index') ? 'bg-orange-700 text-white' : 'text-orange-100 hover:bg-orange-500 hover:text-white' }}">
+                            Data Order
+                        </a>
+                        <a href="{{ route('admin.pesanan.index') }}"
+                           class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('admin.pesanan.index') ? 'bg-orange-700 text-white' : 'text-orange-100 hover:bg-orange-500 hover:text-white' }}">
+                            Order Items
+                        </a>
+                    </div>
+                </div>
 
                 <a href="{{ route('admin.laporan-order.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('admin.laporan-order.*') ? 'bg-orange-700 text-white' : 'text-orange-100 hover:bg-orange-500 hover:text-white' }}">
@@ -127,13 +154,6 @@
                     Profil Usaha
                 </a>
 
-                <a href="{{ route('admin.pesanan.index') }}"
-                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('admin.pesanan.*') ? 'bg-orange-700 text-white' : 'text-orange-100 hover:bg-orange-500 hover:text-white' }}">
-                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
-                    </svg>
-                    Order Items
-                </a>
             </nav>
 
             {{-- Footer --}}
@@ -195,6 +215,15 @@
         overlay?.addEventListener('click', () => {
             sidebar.classList.add('-translate-x-full');
             overlay.classList.add('hidden');
+        });
+
+        const orderMenuToggle = document.getElementById('order-menu-toggle');
+        const orderMenuItems = document.getElementById('order-menu-items');
+        const orderMenuChevron = document.getElementById('order-menu-chevron');
+
+        orderMenuToggle?.addEventListener('click', () => {
+            orderMenuItems.classList.toggle('hidden');
+            orderMenuChevron.classList.toggle('rotate-180');
         });
     </script>
 

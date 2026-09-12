@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pesanan;
+use App\Models\Produk;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -41,6 +43,16 @@ class OrderItemController extends Controller
         $validated['diskon'] = $validated['diskon'] ?? 0;
 
         $item = Pesanan::create($validated);
+
+        $user = User::find($item->id_store);
+        if ($user && $user->jenis_usaha === 'Toko') {
+            $produk = Produk::withoutGlobalScope('store')->find($item->produk_id);
+            if ($produk && $produk->qty_all !== null) {
+                $produk->qty_all = max(0, $produk->qty_all - $item->qty);
+                $produk->save();
+            }
+        }
+
         $item->load(['produk', 'kasir']);
 
         return response()->json([

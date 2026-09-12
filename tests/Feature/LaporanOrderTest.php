@@ -82,4 +82,26 @@ class LaporanOrderTest extends TestCase
             ->assertSee('ORD-BULAN-LALU')
             ->assertSee('Rp '.number_format($totalSemua, 0, ',', '.'));
     }
+
+    public function test_export_pdf_laporan_order(): void
+    {
+        $this->buatOrder('ORD-EXPORT-PDF', today()->toDateString(), 25000);
+
+        $response = $this->get(route('admin.laporan-order.export-pdf'));
+
+        $response->assertOk();
+        $this->assertStringContainsString('application/pdf', $response->headers->get('Content-Type'));
+        $this->assertStringContainsString('laporan-order.pdf', $response->headers->get('Content-Disposition', ''));
+    }
+
+    public function test_export_excel_laporan_order(): void
+    {
+        $this->buatOrder('ORD-EXPORT-EXCEL', today()->toDateString(), 25000);
+
+        $response = $this->get(route('admin.laporan-order.export-excel'));
+
+        $response->assertOk();
+        $this->assertStringContainsString('spreadsheetml.sheet', $response->headers->get('Content-Type'));
+        $this->assertStringContainsString('laporan-order.xlsx', $response->headers->get('Content-Disposition', ''));
+    }
 }

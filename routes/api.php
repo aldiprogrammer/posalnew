@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\KategoriController;
-use App\Http\Controllers\Api\MemberController;
 use App\Http\Controllers\Api\MejaController;
+use App\Http\Controllers\Api\MemberController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\OrderItemController;
 use App\Http\Controllers\Api\PenggunaController;
@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\PotonganMemberController;
 use App\Http\Controllers\Api\PpnController;
 use App\Http\Controllers\Api\ProdukController;
 use App\Http\Controllers\Api\ProfilController;
+use App\Http\Controllers\Api\StoreController;
 use Illuminate\Support\Facades\Route;
 
 // Endpoint by store untuk mobile - sesuai request: GET api/produk/{id_store} return list per store
@@ -34,6 +35,8 @@ Route::get('potongan-member/active/store/{id_store}', [PotonganMemberController:
 Route::get('potongan-member/active/{id_store}', [PotonganMemberController::class, 'activeByStore']);
 Route::get('meja/store/{id_store}', [MejaController::class, 'byStore']);
 Route::get('meja/{id_store}', [MejaController::class, 'byStore']);
+Route::get('jenis-usaha/store/{id_store}', [StoreController::class, 'jenisUsaha']);
+Route::get('jenis-usaha/{id_store}', [StoreController::class, 'jenisUsaha']);
 
 Route::apiResource('kategori', KategoriController::class)->except(['show']);
 Route::get('kategori/detail/{kategori}', [KategoriController::class, 'show']);
