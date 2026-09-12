@@ -138,25 +138,32 @@ class OrderApiTest extends TestCase
         $this->assertDatabaseMissing('order', ['id' => $order->id]);
     }
 
-    private function buatOrderItem(int $produkId, int $qty, string $jenisUsaha = 'Toko', string $kodeOrder = 'ORD-001'): void
+    private function buatOrderItem(int $produkId, int $qty, string $jenisUsaha = 'Toko', string $kodeOrder = 'ORD-001', ?string $satuan = null): void
     {
         User::factory()->create(['id' => 1, 'jenis_usaha' => $jenisUsaha]);
 
-        $this->kirimOrderItem($produkId, $qty, $kodeOrder);
+        $this->kirimOrderItem($produkId, $qty, $kodeOrder, $satuan);
     }
 
-    private function kirimOrderItem(int $produkId, int $qty, string $kodeOrder = 'ORD-001'): void
+    private function kirimOrderItem(int $produkId, int $qty, string $kodeOrder = 'ORD-001', ?string $satuan = null): void
     {
         Order::create($this->buatOrder(['kode_order' => $kodeOrder]));
 
-        $this->postJson('/api/order-items', [
+        $payload = [
             'id_store' => '1',
             'kode_order' => $kodeOrder,
             'produk_id' => $produkId,
             'harga' => 5000,
             'qty' => $qty,
             'tanggal' => '2026-09-12',
-        ])->assertCreated()->assertJsonPath('success', true);
+        ];
+
+        if ($satuan) {
+            $payload['satuan'] = $satuan;
+        }
+
+        $this->postJson('/api/order-items', $payload)
+            ->assertCreated()->assertJsonPath('success', true);
     }
 
     private function buatProduk(array $overrides = []): Produk
@@ -207,5 +214,76 @@ class OrderApiTest extends TestCase
         $this->kirimOrderItem($produk->id, 2, 'ORD-003');
 
         $this->assertSame(100, Produk::find($produk->id)->qty_all);
+    }
+
+    public function test_pembelian_satuan_besar_mengurangi_qty_all_dan_qty(): void
+    {
+        $produk = $this->buatProduk(['qty' => 2, 'isi' => 12, 'qty_all' => 24]);
+
+        $this->buatOrderItem($produk->id, 1, 'Toko', 'ORD-004', 'besar');
+
+        $produkBaru = Produk::find($produk->id);
+        $this->assertSame(12, $produkBaru->qty_all);
+        $this->assertSame(1, $produkBaru->qty);
+    }
+
+    public function test_pembelian_satuan_kecil_mengurangi_qty_all_dan_qty(): void
+    {
+        $produk = $this->buatProduk(['qty' => 2, 'isi' => 12, 'qty_all' => 24]);
+
+        $this->buatOrderItem($produk->id, 6, 'Toko', 'ORD-005', 'kecil');
+
+        $produkBaru = Produk::find($produk->id);
+        $this->assertSame(18, $produkBaru->qty_all);
+        $this->assertSame(1, $produkBaru->qty);
+    }
+
+    public function test_satuan_tanpa_field_default_kecil(): void
+    {
+        $produk = $this->buatProduk(['qty' => 2, 'isi' => 12, 'qty_all' => 24]);
+
+        $this->buatOrderItem($produk->id, 12);
+
+        $produkBaru = Produk::find($produk->id);
+        $this->assertSame(12, $produkBaru->qty_all);
+        $this->assertSame(1, $produkBaru->qty);
+    }
+
+    public function test_satuan_invalid_ditolak(): void
+    {
+        $produk = $this->buatProduk();
+        User::factory()->create(['id' => 1, 'jenis_usaha' => 'Toko']);
+        Order::create($this->buatOrder());
+
+        $this->postJson('/api/order-items', [
+            'id_store' => '1',
+            'kode_order' => 'ORD-001',
+            'produk_id' => $produk->id,
+            'harga' => 5000,
+            'qty' => 1,
+            'tanggal' => '2026-09-12',
+            'satuan' => 'ekor',
+        ])->assertStatus(422)->assertJsonValidationErrors(['satuan']);
+    }
+
+    public function test_update_item_mengembalikan_selisih_stok(): void
+    {
+        $produk = $this->buatProduk(['qty' => 2, 'isi' => 12, 'qty_all' => 24]);
+        $this->buatOrderItem($produk->id, 1, 'Toko', 'ORD-004', 'besar');
+
+        $item = Pesanan::first();
+        $this->assertSame(12, Produk::find($produk->id)->qty_all);
+
+        $this->putJson("/api/order-items/{$item->id}", [
+            'id_store' => '1',
+            'kode_order' => 'ORD-004',
+            'produk_id' => $produk->id,
+            'harga' => 5000,
+            'qty' => 2,
+            'satuan' => 'kecil',
+            'tanggal' => '2026-09-12',
+        ])->assertOk();
+
+        $this->assertSame(22, Produk::find($produk->id)->qty_all);
     }
 }

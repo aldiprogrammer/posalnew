@@ -19,6 +19,7 @@ class Pesanan extends Model
         'produk_id',
         'harga',
         'qty',
+        'satuan',
         'diskon',
         'tanggal',
         'kasir_id',
