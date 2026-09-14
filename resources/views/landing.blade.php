@@ -267,7 +267,7 @@
 
             <div class="mt-14 grid md:grid-cols-3 gap-6 reveal" style="transition-delay: 100ms">
                 <div class="p-8 rounded-2xl bg-orange-50/70 border border-orange-100">
-                    <div class="flex text-orange-500 text-lg">â˜…â˜…â˜…â˜…â˜…</div>
+                    <div class="flex text-orange-500 text-lg"></div>
                     <p class="mt-4 text-slate-700">&ldquo;Sejak pakai POSAL, antrian kasir jadi lebih cepat. Laporan harian juga langsung terlihat. Sangat direkomendasikan!&rdquo;</p>
                     <div class="mt-6 flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-orange-600 text-white flex items-center justify-center font-bold">A</div>
@@ -278,7 +278,7 @@
                     </div>
                 </div>
                 <div class="p-8 rounded-2xl bg-orange-50/70 border border-orange-100">
-                    <div class="flex text-orange-500 text-lg">â˜…â˜…â˜…â˜…â˜…</div>
+                    <div class="flex text-orange-500 text-lg"></div>
                     <p class="mt-4 text-slate-700">&ldquo;Fitur member dan potongan harganya sangat membantu restoran kami. Pelanggan jadi semakin loyal.&rdquo;</p>
                     <div class="mt-6 flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-orange-600 text-white flex items-center justify-center font-bold">S</div>
@@ -289,7 +289,7 @@
                     </div>
                 </div>
                 <div class="p-8 rounded-2xl bg-orange-50/70 border border-orange-100">
-                    <div class="flex text-orange-500 text-lg">â˜…â˜…â˜…â˜…â˜…</div>
+                    <div class="flex text-orange-500 text-lg"></div>
                     <p class="mt-4 text-slate-700">&ldquo;Stok barang sekarang akurat, tidak pernah kehabisan lagi di jam sibuk. POSAL nomor satu!&rdquo;</p>
                     <div class="mt-6 flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-orange-600 text-white flex items-center justify-center font-bold">B</div>
