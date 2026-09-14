@@ -11,9 +11,9 @@
     <div class="w-full max-w-2xl">
         {{-- Logo --}}
         <div class="flex flex-col items-center mb-6">
-            <div class="w-14 h-14 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center font-bold text-2xl text-white mb-3">P</div>
-            <h1 class="text-2xl font-bold text-white tracking-wide">POS Admin</h1>
-            <p class="text-orange-100 text-sm mt-1">Daftarkan toko/cafe Anda</p>
+            <img src="{{ asset('logo/logonew.png') }}" alt="POSAL" class="h-14 w-auto mb-3">
+            <h1 class="text-2xl font-bold text-white tracking-wide">Register</h1>
+            <p class="text-orange-100 text-sm mt-1">Daftarkan toko/cafe Anda Di Halaman Ini</p>
         </div>
 
         {{-- Card --}}
@@ -132,7 +132,7 @@
             </form>
         </div>
 
-        <p class="text-center text-orange-100 text-xs mt-6">&copy; {{ date('Y') }} POS System</p>
+        <p class="text-center text-orange-100 text-xs mt-6">&copy; {{ date('Y') }} POSAL System</p>
     </div>
 
 </body>

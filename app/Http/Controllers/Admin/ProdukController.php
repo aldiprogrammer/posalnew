@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Produk;
+use App\Models\Profil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -39,12 +40,18 @@ class ProdukController extends Controller
         $produks = Produk::with('kategori')->latest()->paginate(10);
         $modeSatuan = $this->modeSatuan();
         $satuanList = self::SATUAN_LIST;
+        $profilLengkap = Profil::exists();
 
-        return view('admin.produk.index', compact('produks', 'modeSatuan', 'satuanList'));
+        return view('admin.produk.index', compact('produks', 'modeSatuan', 'satuanList', 'profilLengkap'));
     }
 
     public function store(Request $request)
     {
+        if (! Profil::exists()) {
+            return redirect()->route('admin.produk.index')
+                ->with('error', 'Profil usaha belum dilengkapi. Silakan isi data profil terlebih dahulu sebelum menambah produk.');
+        }
+
         $modeSatuan = $this->modeSatuan();
         $pakaiSatuanBesar = $request->input('pakai_satuan_besar') === '1';
 

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Kategori;
 use App\Models\Produk;
+use App\Models\Profil;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -14,7 +15,13 @@ class ProdukFormTest extends TestCase
 
     private function login(string $jenisUsaha): void
     {
-        $this->actingAs(User::factory()->create(['jenis_usaha' => $jenisUsaha]));
+        $user = User::factory()->create(['jenis_usaha' => $jenisUsaha]);
+        $this->actingAs($user);
+
+        Profil::create([
+            'nama_usaha' => 'Toko Test',
+            'id_store' => (string) $user->id,
+        ]);
     }
 
     private function kategori(): Kategori

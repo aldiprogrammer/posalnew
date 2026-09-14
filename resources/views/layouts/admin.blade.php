@@ -17,7 +17,7 @@
             {{-- Logo --}}
             <div class="flex items-center gap-3 px-6 py-5 border-b border-orange-500">
                 <div class="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center font-bold text-lg">P</div>
-                <span class="text-lg font-semibold tracking-wide">POS Admin</span>
+                <span class="text-lg font-semibold tracking-wide">POSAL Admin</span>
             </div>
 
             {{-- Navigation --}}
@@ -144,6 +144,14 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-6m3 6v-4m6 4V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2h14a2 2 0 002-2z"/>
                     </svg>
                     Laporan Order
+                </a>
+
+                <a href="{{ route('admin.download-apk.index') }}"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('admin.download-apk.*') ? 'bg-orange-700 text-white' : 'text-orange-100 hover:bg-orange-500 hover:text-white' }}">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Download APK
                 </a>
 
                 <a href="{{ route('admin.profil.edit') }}"

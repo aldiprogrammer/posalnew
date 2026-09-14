@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 
 class RegisterController extends Controller
 {
-    public const JENIS_USAHA = ['Restoran', 'Cafe', 'Toko', 'Lainnya'];
+    public const JENIS_USAHA = ['Cafe', 'Toko'];
 
     public function showRegistrationForm()
     {
@@ -57,6 +57,9 @@ class RegisterController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('admin.dashboard')->with('success', 'Registrasi berhasil! Selamat datang, '.$user->name.'.');
+        $user->sendEmailVerificationNotification();
+
+        return redirect()->route('verification.notice')
+            ->with('success', 'Registrasi berhasil! Silakan verifikasi email Anda, '.$user->name.'.');
     }
 }

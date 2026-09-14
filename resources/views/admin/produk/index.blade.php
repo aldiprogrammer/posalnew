@@ -3,11 +3,38 @@
 @section('content')
     <div class="flex items-center justify-between mb-6">
         <p class="text-gray-600">Kelola data produk.</p>
-        <button onclick="openModal('modal-create')" class="inline-flex items-center gap-2 bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-            Tambah Produk
-        </button>
+        @if ($profilLengkap)
+            <button onclick="openModal('modal-create')" class="inline-flex items-center gap-2 bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                Tambah Produk
+            </button>
+        @else
+            <span class="inline-flex items-center gap-2 bg-gray-300 text-white px-4 py-2 rounded-lg text-sm font-medium cursor-not-allowed opacity-70" title="Lengkapi profil usaha terlebih dahulu">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                Tambah Produk
+            </span>
+        @endif
     </div>
+
+    @if (!$profilLengkap)
+        <div class="mb-4 bg-orange-50 border border-orange-300 text-orange-800 px-4 py-3 rounded-lg text-sm flex items-start gap-3">
+            <svg class="w-5 h-5 text-orange-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            <div>
+                <p class="font-semibold">Profil usaha belum dilengkapi.</p>
+                <p class="mt-0.5">Anda belum bisa menambah produk. Silakan lengkapi data profil usaha terlebih dahulu.</p>
+                <a href="{{ route('admin.profil.edit') }}" class="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-orange-700 hover:underline">
+                    Lengkapi Profil Sekarang
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+            {{ session('error') }}
+        </div>
+    @endif
 
     @if (session('success'))
         <div class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">

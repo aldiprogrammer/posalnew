@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DownloadApkController;
 use App\Http\Controllers\Admin\InventarisController;
 use App\Http\Controllers\Admin\JabatanController;
 use App\Http\Controllers\Admin\KategoriController;
@@ -17,13 +18,10 @@ use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Admin\ProfilController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\VerificationController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return auth()->check()
-        ? redirect()->route('admin.dashboard')
-        : redirect()->route('login');
-});
+Route::view('/', 'landing')->name('home');
 
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('login.attempt');
@@ -31,7 +29,17 @@ Route::get('register', [RegisterController::class, 'showRegistrationForm'])->nam
 Route::post('register', [RegisterController::class, 'register'])->name('register.store');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+Route::middleware('auth')->group(function () {
+    Route::get('email/verify', [VerificationController::class, 'notice'])->name('verification.notice');
+    Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+        ->middleware('signed')
+        ->name('verification.verify');
+    Route::post('email/verification-notification', [VerificationController::class, 'send'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
+});
+
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/', DashboardController::class)->name('dashboard');
     Route::resource('pegawai', PegawaiController::class)->except(['show']);
     Route::resource('kategori', KategoriController::class)->except(['show', 'create', 'edit']);
@@ -53,4 +61,6 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('laporan-order/export-excel', [LaporanOrderController::class, 'exportExcel'])->name('laporan-order.export-excel');
     Route::get('profil', [ProfilController::class, 'edit'])->name('profil.edit');
     Route::put('profil', [ProfilController::class, 'update'])->name('profil.update');
+    Route::get('download-apk', [DownloadApkController::class, 'index'])->name('download-apk.index');
+    Route::get('download-apk/download', [DownloadApkController::class, 'download'])->name('download-apk.download');
 });

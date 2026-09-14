@@ -51,7 +51,6 @@
                     Masuk
                 </button>
             </form>
-
             <div class="px-8 py-4 bg-gray-50 border-t border-gray-100 text-center">
                 <p class="text-sm text-gray-600">
                     Belum punya akun?
@@ -60,8 +59,8 @@
             </div>
         </div>
 
-        <p class="text-center text-orange-100 text-xs mt-6">&copy; {{ date('Y') }} POS System</p>
+        <p class="text-center text-orange-100 text-xs mt-6">&copy; {{ date('Y') }} POSAL System</p>
     </div>
 
 </body>
-</html>
+</html
