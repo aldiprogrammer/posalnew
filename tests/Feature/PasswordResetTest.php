@@ -37,6 +37,33 @@ class PasswordResetTest extends TestCase
 
             $this->assertStringStartsWith(rtrim(config('app.url'), '/').'/reset-password/', $url);
             $this->assertStringContainsString($user->email, $url);
+            $this->assertMatchesRegularExpression('#/reset-password/[0-9a-f]{64}\?email=#', $url);
+
+            return true;
+        });
+    }
+
+    public function test_link_di_email_mengarah_ke_halaman_buat_password_baru(): void
+    {
+        Notification::fake();
+
+        $user = User::factory()->create();
+
+        $this->post(route('password.email'), ['email' => $user->email]);
+
+        Notification::assertSentTo($user, ResetPassword::class, function ($notification) use ($user) {
+            $url = $notification->toMail($user)->data['url'] ?? '';
+
+            $parsed = parse_url($url);
+            $path = $parsed['path'] ?? '';
+            parse_str($parsed['query'] ?? '', $query);
+            $token = basename($path);
+
+            $this->assertSame(parse_url(config('app.url'), PHP_URL_HOST), $parsed['host'] ?? '');
+            $this->assertSame('/reset-password/'.$token, $path);
+            $this->assertSame($user->email, $query['email'] ?? '');
+
+            $this->get($url)->assertOk()->assertSee('Buat Password Baru');
 
             return true;
         });

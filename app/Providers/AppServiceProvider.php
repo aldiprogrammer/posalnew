@@ -31,22 +31,24 @@ class AppServiceProvider extends ServiceProvider
                 ]);
         });
 
-        ResetPassword::toMailUsing(function ($notifiable, $url) {
-            return (new MailMessage)
-                ->subject('Reset Password Akun POSAL')
-                ->view('emails.reset-password', [
-                    'url' => $url,
-                    'user' => $notifiable,
-                ]);
-        });
-
-        ResetPassword::createUrlUsing(function ($notifiable, string $token) {
+        $resetUrl = function ($notifiable, string $token): string {
             $path = route('password.reset', [
                 'token' => $token,
                 'email' => $notifiable->getEmailForPasswordReset(),
             ], false);
 
             return rtrim((string) config('app.url'), '/').'/'.ltrim($path, '/');
+        };
+
+        ResetPassword::toMailUsing(function ($notifiable, string $token) use ($resetUrl) {
+            return (new MailMessage)
+                ->subject('Reset Password Akun POSAL')
+                ->view('emails.reset-password', [
+                    'url' => $resetUrl($notifiable, $token),
+                    'user' => $notifiable,
+                ]);
         });
+
+        ResetPassword::createUrlUsing($resetUrl);
     }
 }
