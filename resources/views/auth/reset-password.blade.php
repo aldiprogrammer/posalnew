@@ -33,6 +33,13 @@
                     </div>
                 @endif
 
+                @unless ($tokenValid)
+                    <div class="bg-orange-50 border border-orange-200 text-orange-800 px-4 py-3 rounded-lg text-sm leading-relaxed">
+                        Link reset password ini <strong>tidak valid atau sudah kedaluwarsa</strong>.
+                        Minta link baru di bawah, atau kembali ke halaman lupa password.
+                    </div>
+                @endunless
+
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                     <input type="email" id="email" name="email" value="{{ old('email', $email) }}" required readonly

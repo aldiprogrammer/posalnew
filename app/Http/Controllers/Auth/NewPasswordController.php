@@ -14,9 +14,14 @@ class NewPasswordController extends Controller
 {
     public function create(Request $request, string $token)
     {
+        $email = (string) $request->query('email', '');
+
+        $user = $email !== '' ? User::where('email', $email)->first() : null;
+
         return view('auth.reset-password', [
             'token' => $token,
-            'email' => (string) $request->query('email', ''),
+            'email' => $email,
+            'tokenValid' => $user ? Password::broker()->tokenExists($user, $token) : false,
         ]);
     }
 

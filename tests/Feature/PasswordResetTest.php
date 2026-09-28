@@ -33,7 +33,10 @@ class PasswordResetTest extends TestCase
             ->assertSessionHas('status');
 
         Notification::assertSentTo($user, ResetPassword::class, function ($notification) use ($user) {
-            $this->assertStringContainsString('reset-password/', $notification->toMail($user)->data['url'] ?? '');
+            $url = $notification->toMail($user)->data['url'] ?? '';
+
+            $this->assertStringStartsWith(rtrim(config('app.url'), '/').'/reset-password/', $url);
+            $this->assertStringContainsString($user->email, $url);
 
             return true;
         });
@@ -57,11 +60,24 @@ class PasswordResetTest extends TestCase
 
     public function test_halaman_buat_password_baru_tampil_dengan_token(): void
     {
-        $this->get(route('password.reset', ['token' => 'token-palsu', 'email' => 'budi@email.com']))
+        $user = User::factory()->create();
+        $token = Password::broker()->createToken($user);
+
+        $this->get(route('password.reset', ['token' => $token, 'email' => $user->email]))
             ->assertOk()
             ->assertSee('Buat Password Baru')
-            ->assertSee('token-palsu')
-            ->assertSee('budi@email.com');
+            ->assertSee($token)
+            ->assertSee($user->email)
+            ->assertDontSee('sudah kedaluwarsa');
+    }
+
+    public function test_halaman_beri_peringatan_jika_token_tidak_valid(): void
+    {
+        $user = User::factory()->create();
+
+        $this->get(route('password.reset', ['token' => 'token-palsu', 'email' => $user->email]))
+            ->assertOk()
+            ->assertSee('sudah kedaluwarsa');
     }
 
     public function test_bisa_memperbarui_password_dengan_token_valid(): void
