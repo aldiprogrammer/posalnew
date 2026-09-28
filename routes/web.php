@@ -17,6 +17,8 @@ use App\Http\Controllers\Admin\PpnController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Admin\ProfilController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +30,13 @@ Route::post('login', [LoginController::class, 'login'])->name('login.attempt');
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [RegisterController::class, 'register'])->name('register.store');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::get('lupa-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
+Route::post('lupa-password', [PasswordResetLinkController::class, 'store'])
+    ->middleware('throttle:6,1')
+    ->name('password.email');
+Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
+Route::post('reset-password', [NewPasswordController::class, 'store'])->name('password.update');
 
 Route::middleware('auth')->group(function () {
     Route::get('email/verify', [VerificationController::class, 'notice'])->name('verification.notice');
